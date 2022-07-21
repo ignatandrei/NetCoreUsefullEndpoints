@@ -27,3 +27,10 @@ jobs:
         cd src
         cd UsefullEndpoints
         dotnet build --no-restore
+    - name: Pack
+      run: |
+        cd src
+        cd UsefullEndpoints
+        cd UsefullExtensions
+        dotnet pack -o ../nugetPackages  --include-symbols --include-source
+
