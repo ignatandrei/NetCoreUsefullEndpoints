@@ -20,8 +20,10 @@ jobs:
     - name: Restore dependencies
       run: |
         cd src 
+        cd UsefullEndpoints
         dotnet restore
     - name: Build
       run: |
         cd src
+        cd UsefullEndpoints
         dotnet build --no-restore
