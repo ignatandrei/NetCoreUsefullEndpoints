@@ -13,7 +13,7 @@
 		<Version>6.2022.721.1154</Version>
 		<Authors>Andrei Ignat</Authors>
 		<Description>Some usefull extensions: error, environment, user</Description>
-		<Title>AboutMySoftware Base</Title>
+		<Title>UsefullEndpoints</Title>
 		<PackageTags>C#;.NET;ASP.NET Core;</PackageTags>
 		<!--<PackageReadmeFile>readme.md</PackageReadmeFile>-->
 		<RepositoryUrl>https://github.com/ignatandrei/NetCoreUsefullEndpoints</RepositoryUrl>
