@@ -64,7 +64,7 @@ namespace UsefullExtensions
                     x = (x - 1) / (x - 1);
                     return Results.Ok("fake x");
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     throw;
                 }
