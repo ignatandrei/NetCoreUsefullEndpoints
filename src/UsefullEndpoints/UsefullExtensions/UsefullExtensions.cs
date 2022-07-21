@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 
 namespace UsefullExtensions
 {
-    
     public static class UsefullExtensions
     {
         public static void MapAllUsefull(this IEndpointRouteBuilder route)
@@ -24,15 +23,20 @@ namespace UsefullExtensions
             ArgumentNullException.ThrowIfNull(route);
             route.MapGet("api/usefull/user/", (HttpContext httpContext) =>
             {
-                return Results.Ok(httpContext.User?.Identity?.Name);
+                return Results.Ok(httpContext.User);
             });
         }
         public static void MapEnvironment(this IEndpointRouteBuilder route)
         {
             ArgumentNullException.ThrowIfNull(route);
+            //route.MapGet("api/usefull/environment/",  (HttpContext httpContext) =>
+            //{
+            //    return Results.Ok(Environment.UserDomainName);
+            //});
+
             route.MapGet("api/usefull/environment/", (HttpContext httpContext) =>
             {
-                return Results.Ok(Environment.UserName);
+                return Results.Ok(new Helper().FromStaticEnvironment());
             });
 
 
@@ -57,6 +61,7 @@ namespace UsefullExtensions
 
             route.MapGet("api/usefull/errorPure", (HttpContext httpContext) =>
             {
+                //return Results.Ok("tesr");
                 try
                 {
                     var x = 0;
@@ -71,9 +76,9 @@ namespace UsefullExtensions
             });
 
         }
-        public static void MapGraph(this IEndpointRouteBuilder route )
+        public static void MapGraph(this IEndpointRouteBuilder route)
         {
-            route.MapGet("api/usefull/graph/text", (HttpContext httpContext, [FromServices] DfaGraphWriter graphWriter,[FromServices] EndpointDataSource dataSource) =>
+            route.MapGet("api/usefull/graph/text", (HttpContext httpContext, [FromServices] DfaGraphWriter graphWriter, [FromServices] EndpointDataSource dataSource) =>
             {
                 using (var sw = new StringWriter())
                 {
