@@ -34,7 +34,7 @@
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
 	<PropertyGroup>
-	  <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+	  <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
 	</PropertyGroup>
 
 </Project>
