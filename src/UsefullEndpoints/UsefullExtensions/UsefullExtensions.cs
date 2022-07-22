@@ -87,7 +87,7 @@ namespace UsefullExtensions
                     var graph = sw.ToString();
 
                     // Write the graph to the response
-                    return Results.Ok(graph);
+                    return Results.Content(graph);
                 }
             });
         }
