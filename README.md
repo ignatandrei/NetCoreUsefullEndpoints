@@ -20,3 +20,17 @@ var app = builder.Build();
 app.MapAllUsefull();
 
 ```
+
+The list of API endpoints is
+
+GET => /api​/usefull​/user
+
+GET => ​/api​/usefull​/environment
+
+GET => ​/api​/usefull​/errorWithILogger
+
+GET => ​/api​/usefull​/errorPure
+
+GET => ​/api​/usefull​/graph​/text
+
+# Enjoy!
