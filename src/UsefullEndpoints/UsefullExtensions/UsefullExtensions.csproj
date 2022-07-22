@@ -20,7 +20,7 @@
 		<Description>Some usefull extensions: error, environment, user</Description>
 		<Title>UsefullEndpoints</Title>
 		<PackageTags>C#;.NET;ASP.NET Core;</PackageTags>
-		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/ignatandrei/NetCoreUsefullEndpoints</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/ignatandrei/NetCoreUsefullEndpoints</PackageProjectUrl>
 		<RepositoryType>GIT</RepositoryType>
