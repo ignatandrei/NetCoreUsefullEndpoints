@@ -34,14 +34,17 @@ app.MapAllUsefull();
 
 The list of API endpoints is
 
-GET => /api​/usefull​/user
 
-GET => ​/api​/usefull​/environment
+GET=>/api/usefull/user
 
-GET => ​/api​/usefull​/errorWithILogger
+GET=>/api/usefull/environment
 
-GET => ​/api​/usefull​/errorPure
+GET=>/api/usefull/errorWithILogger
 
-GET => ​/api​/usefull​/graph​/text
+GET=>/api/usefull/errorPure
+
+GET=>/api/usefull/date
+
+GET=>/api/usefull/graph/text
 
 # Enjoy!
