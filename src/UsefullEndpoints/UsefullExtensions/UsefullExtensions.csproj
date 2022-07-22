@@ -8,7 +8,7 @@
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-		<PackageReference Include="RSCG_Static" Version="2021.12.18.2037" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<PackageReference Include="RSCG_Static" Version="2021.12.18.2037" PrivateAssets="all" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 
 	</ItemGroup>
 	<PropertyGroup>
