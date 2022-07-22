@@ -18,7 +18,8 @@
 		<Version>6.2022.721.1154</Version>
 		<Authors>Andrei Ignat</Authors>
 		<Description>Some usefull extensions: error, environment, user</Description>
-		<Title>UsefullEndpoints</Title>
+		<Title>NetCoreUsefullEndpoints</Title>
+		<PackageId>NetCoreUsefullEndpoints</PackageId>
 		<PackageTags>C#;.NET;ASP.NET Core;</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/ignatandrei/NetCoreUsefullEndpoints</RepositoryUrl>
