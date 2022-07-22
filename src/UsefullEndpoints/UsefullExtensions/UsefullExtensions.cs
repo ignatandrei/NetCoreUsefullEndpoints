@@ -15,6 +15,7 @@ namespace UsefullExtensions
             route.MapUser();
             route.MapEnvironment();
             route.MapError();
+            route.MapDate();
             route.MapGraph();
         }
 
@@ -24,6 +25,14 @@ namespace UsefullExtensions
             route.MapGet("api/usefull/user/", (HttpContext httpContext) =>
             {
                 return Results.Ok(httpContext.User);
+            });
+        }
+        public static void MapDate(this IEndpointRouteBuilder route)
+        {
+            ArgumentNullException.ThrowIfNull(route);
+            route.MapGet("api/usefull/date/", (HttpContext httpContext) =>
+            {
+                return Results.Ok(DateTime.Now);
             });
         }
         public static void MapEnvironment(this IEndpointRouteBuilder route)
