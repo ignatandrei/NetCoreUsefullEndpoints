@@ -12,6 +12,16 @@ Register endpoints for
 
 
 # Usage
+Add this reference
+
+```xml
+<ItemGroup>
+    <PackageReference Include="NetCoreUsefullEndpoints" Version="6.2022.722.712" />
+  </ItemGroup>
+
+```
+
+then use it in program.cs
 
 ```csharp
 using UsefullExtensions;
