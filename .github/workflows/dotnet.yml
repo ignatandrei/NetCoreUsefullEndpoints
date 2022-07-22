@@ -21,11 +21,14 @@ jobs:
       run: |
         cd src 
         cd UsefullEndpoints
+        dotnet tool restore
+        dotnet pwsh readme.ps1        
         dotnet restore
     - name: Build
       run: |
         cd src
         cd UsefullEndpoints
+        
         dotnet build --no-restore
     - name: Pack
       run: |
