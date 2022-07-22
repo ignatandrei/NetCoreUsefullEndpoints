@@ -10,6 +10,7 @@ Register endpoints for
 1. See environment variables
 2. See current user
 3. Throw error ( with ILogger or without )
+4. Current Date
 
 
 # Usage
