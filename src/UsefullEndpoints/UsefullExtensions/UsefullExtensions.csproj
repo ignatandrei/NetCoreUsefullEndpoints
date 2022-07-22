@@ -12,7 +12,7 @@
 		<PackageReference Include="RSCG_Static" Version="2021.12.18.2037" PrivateAssets="all" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<None Include="../../../README.md" Pack="true" PackagePath="\" />
 		<None Include="../../../docs/nuget.png" Pack="true" PackagePath="\" />    
-
+		<None Include="../readme.txt" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<PropertyGroup>
 		<Version>6.2022.721.1154</Version>

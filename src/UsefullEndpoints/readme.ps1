@@ -22,3 +22,7 @@ For($i=0;$i -lt $fileContent.Length ; $i++){
 }
 
 $fileContent |Set-Content $path
+
+$md = ConvertFrom-Markdown -AsVT100EncodedString -Path $path
+$md
+$md.VT100EncodedString | Out-File -Encoding utf8 .\readme.txt
