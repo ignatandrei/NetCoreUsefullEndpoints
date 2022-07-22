@@ -8,16 +8,20 @@
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-		<PackageReference Include="RSCG_Static" Version="2021.12.18.2037" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-
+		 <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />   
+		<PackageReference Include="RSCG_Static" Version="2021.12.18.2037" PrivateAssets="all" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<None Include="../../../README.md" Pack="true" PackagePath="\" />
+		<None Include="../../../docs/nuget.png" Pack="true" PackagePath="\" />    
+		<None Include="../readme.txt" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<PropertyGroup>
 		<Version>6.2022.721.1154</Version>
 		<Authors>Andrei Ignat</Authors>
 		<Description>Some usefull extensions: error, environment, user</Description>
-		<Title>UsefullEndpoints</Title>
+		<Title>NetCoreUsefullEndpoints</Title>
+		<PackageId>NetCoreUsefullEndpoints</PackageId>
 		<PackageTags>C#;.NET;ASP.NET Core;</PackageTags>
-		<!--<PackageReadmeFile>readme.md</PackageReadmeFile>-->
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/ignatandrei/NetCoreUsefullEndpoints</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/ignatandrei/NetCoreUsefullEndpoints</PackageProjectUrl>
 		<RepositoryType>GIT</RepositoryType>
