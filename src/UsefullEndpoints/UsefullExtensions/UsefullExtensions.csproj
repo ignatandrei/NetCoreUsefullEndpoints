@@ -15,8 +15,9 @@
 		<None Include="../readme.txt" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<PropertyGroup>
-		<Version>6.2022.721.1154</Version>
+		<Version>6.2022.722.712</Version>
 		<Authors>Andrei Ignat</Authors>
+		
 		<Description>Some usefull extensions: error, environment, user</Description>
 		<Title>NetCoreUsefullEndpoints</Title>
 		<PackageId>NetCoreUsefullEndpoints</PackageId>
@@ -39,6 +40,7 @@
 	</PropertyGroup>
 	<PropertyGroup>
 	  <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+	  <PackageIcon>nuget.png</PackageIcon>
 	</PropertyGroup>
 
 </Project>
