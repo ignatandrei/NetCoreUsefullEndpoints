@@ -29,8 +29,9 @@ then use it in program.cs
 using UsefullExtensions;
 //code
 var app = builder.Build();
-app.MapAllUsefull();
-
+app.MapUsefullAll();
+//or for just some usefull
+app.MapUsefullConfiguration();
 ```
 
 The list of API endpoints is
@@ -47,5 +48,17 @@ GET=>/api/usefull/errorPure
 GET=>/api/usefull/date
 
 GET=>/api/usefull/graph/text
+
+
+# Security
+
+Each function has a default implementation with AllowAnonymous ( a part user ) and without put RequireCors ;
+If you want a special case here, call the functions with
+```csharp
+app.MapUsefullAll("myCors", new string[] {"myAuthPolicy"});
+//or
+app.MapUsefullConfiguration();
+```
+
 
 # Enjoy!
