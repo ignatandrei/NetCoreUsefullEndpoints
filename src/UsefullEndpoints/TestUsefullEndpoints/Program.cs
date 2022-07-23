@@ -21,7 +21,7 @@ app.UseCors(it => it.AllowCredentials().AllowAnyHeader().AllowAnyMethod().SetIsO
 
 app.MapUsefullAll();
 //app.MapUsefullAll("myCors", new string[] {"myAuthPolicy"});
-app.
+//app.MapUsefullConfiguration();
 
 app.UseAuthorization();
 
