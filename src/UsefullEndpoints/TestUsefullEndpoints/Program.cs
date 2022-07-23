@@ -19,10 +19,9 @@ app.UseCors(it => it.AllowCredentials().AllowAnyHeader().AllowAnyMethod().SetIsO
     app.UseSwaggerUI();
 }
 
-app.MapAllUsefull();
-
-
-
+app.MapUsefullAll();
+//app.MapUsefullAll("myCors", new string[] {"myAuthPolicy"});
+//app.MapUsefullConfiguration();
 
 app.UseAuthorization();
 
