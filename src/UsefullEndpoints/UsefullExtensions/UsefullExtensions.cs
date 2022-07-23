@@ -3,58 +3,102 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace UsefullExtensions
 {
     public static class UsefullExtensions
     {
-        public static void MapAllUsefull(this IEndpointRouteBuilder route)
+        public static void MapAllUsefull(this IEndpointRouteBuilder route,string? cors= null, string[]? authorization=null)
         {
-
-            route.MapUser();
-            route.MapEnvironment();
-            route.MapError();
-            route.MapDate();
-            route.MapGraph();
+            route.MapUser(cors, authorization);
+            route.MapEnvironment(cors, authorization);
+            route.MapError(cors, authorization);
+            route.MapDate(cors, authorization);
+            route.MapGraph(cors, authorization);
+            route.MapConfiguration(cors, authorization);
         }
+        private static void AddDefault(this RouteHandlerBuilder rh, string? corsPolicy = null, string[]? authorization = null)
+        {
+            if (authorization?.Length > 0)
+            {
+                if(authorization.Length ==1 && string.IsNullOrWhiteSpace(authorization[0]))
+                    rh.RequireAuthorization();
 
-        public static void MapUser(this IEndpointRouteBuilder route)
+                else
+                    rh.RequireAuthorization(authorization);
+            }
+            else
+                rh = rh.AllowAnonymous();
+
+            if (!string.IsNullOrWhiteSpace(corsPolicy))
+                rh.RequireCors(corsPolicy);
+
+        }
+        public static void MapUser(this IEndpointRouteBuilder route, string? corsPolicy = null,string[]? authorization =null)
         {
             ArgumentNullException.ThrowIfNull(route);
-            route.MapGet("api/usefull/user/", (HttpContext httpContext) =>
+            var rh = route.MapGet("api/usefull/user/authorization", (HttpContext httpContext) =>
             {
                 return Results.Ok(httpContext.User);
             });
+            if((authorization?.Length??0) == 0)
+            {
+                authorization = new string[1] { "" };
+            }
+            rh.AddDefault(corsPolicy, authorization);
+            rh = route.MapGet("api/usefull/user/noAuthorization", (HttpContext httpContext) =>
+            {
+                return Results.Ok(httpContext.User);
+            });
+
+            rh.AddDefault(corsPolicy,null);
+
         }
-        public static void MapDate(this IEndpointRouteBuilder route)
+        public static void MapConfiguration(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
         {
             ArgumentNullException.ThrowIfNull(route);
-            route.MapGet("api/usefull/date/", (HttpContext httpContext) =>
+            var rh=route.MapGet("api/usefull/configuration/", ([FromServices]IConfiguration config) =>
+            {
+                var c = config as IConfigurationRoot;
+                if (c != null)
+                {
+                    return Results.Content(c.GetDebugView());
+                }
+                else
+                {                    
+                    return Results.NoContent();
+                }
+            });
+            rh.AddDefault(corsPolicy, authorization);
+        }
+        public static void MapDate(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
+        {
+            ArgumentNullException.ThrowIfNull(route);
+            var rh = route.MapGet("api/usefull/date/", (HttpContext httpContext) =>
             {
                 return Results.Ok(DateTime.Now);
             });
+            rh.AddDefault(corsPolicy, authorization);
         }
-        public static void MapEnvironment(this IEndpointRouteBuilder route)
+        public static void MapEnvironment(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
         {
             ArgumentNullException.ThrowIfNull(route);
-            //route.MapGet("api/usefull/environment/",  (HttpContext httpContext) =>
-            //{
-            //    return Results.Ok(Environment.UserDomainName);
-            //});
 
-            route.MapGet("api/usefull/environment/", (HttpContext httpContext) =>
+            var rh=route.MapGet("api/usefull/environment/", (HttpContext httpContext) =>
             {
                 return Results.Ok(new Helper().FromStaticEnvironment());
             });
-
+            rh.AddDefault(corsPolicy, authorization);
 
         }
-        public static void MapError(this IEndpointRouteBuilder route)
+        public static void MapError(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
         {
             ArgumentNullException.ThrowIfNull(route);
 
-            route.MapGet("api/usefull/errorWithILogger", (HttpContext httpContext, [FromServices] ILogger logger) =>
+            var rh = route.MapGet("api/usefull/errorWithILogger", (HttpContext httpContext, [FromServices] ILogger logger) =>
             {
                 try
                 {
@@ -67,8 +111,8 @@ namespace UsefullExtensions
                     throw;
                 }
             });
-
-            route.MapGet("api/usefull/errorPure", (HttpContext httpContext) =>
+            rh.AddDefault(corsPolicy, authorization);
+            rh=route.MapGet("api/usefull/errorPure", (HttpContext httpContext) =>
             {
                 //return Results.Ok("tesr");
                 try
@@ -83,11 +127,12 @@ namespace UsefullExtensions
                     throw;
                 }
             });
+            rh.AddDefault(corsPolicy, authorization);
 
         }
-        public static void MapGraph(this IEndpointRouteBuilder route)
+        public static void MapGraph(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
         {
-            route.MapGet("api/usefull/graph/text", (HttpContext httpContext, [FromServices] DfaGraphWriter graphWriter, [FromServices] EndpointDataSource dataSource) =>
+            var rh=route.MapGet("api/usefull/endpoints/graph", (HttpContext httpContext, [FromServices] DfaGraphWriter graphWriter, [FromServices] EndpointDataSource dataSource) =>
             {
                 using (var sw = new StringWriter())
                 {
@@ -99,6 +144,24 @@ namespace UsefullExtensions
                     return Results.Content(graph);
                 }
             });
+            rh.AddDefault(corsPolicy, authorization);
+
+            route.MapGet("api/usefull/endpoints/text", (HttpContext httpContext, [FromServices] IEnumerable<EndpointDataSource> endpointSources) =>
+            {
+
+            
+            var endpoints = endpointSources.SelectMany(es => es.Endpoints);
+            var res = endpoints.Select(endpoint =>
+            new {
+                name = endpoint.DisplayName,
+                routeName = endpoint.Metadata.OfType<RouteNameMetadata>().FirstOrDefault(),
+                httpMethod= endpoint.Metadata.OfType<HttpMethodMetadata>().FirstOrDefault()
+
+            }).ToArray();
+                return Results.Ok(res);
+            });
+            rh.AddDefault(corsPolicy, authorization);
+
         }
     }
 }

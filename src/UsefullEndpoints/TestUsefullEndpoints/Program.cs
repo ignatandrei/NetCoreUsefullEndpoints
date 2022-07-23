@@ -20,7 +20,7 @@ app.UseCors(it => it.AllowCredentials().AllowAnyHeader().AllowAnyMethod().SetIsO
 }
 
 app.MapAllUsefull();
-
+//app.MapUser();
 
 
 
