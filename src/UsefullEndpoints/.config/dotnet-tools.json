@@ -13,6 +13,12 @@
       "commands": [
         "pwsh"
       ]
+    },
+    "run-script": {
+      "version": "0.3.0",
+      "commands": [
+        "r"
+      ]
     }
   }
 }

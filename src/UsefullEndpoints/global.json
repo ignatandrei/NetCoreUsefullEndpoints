@@ -1,0 +1,10 @@
+{
+  "scripts": {
+	  "make_readme":"dotnet pwsh readme.ps1",
+	  "prebuild":"dotnet restore",
+    "build": "dotnet build --no-restore",
+    "test": "dotnet test --configuration Release",
+	  "prepack":"dotnet r build",
+    "pack": "cd UsefullExtensions &&  dotnet pack -o ../nugetPackages  --include-symbols --include-source"
+  }
+}
