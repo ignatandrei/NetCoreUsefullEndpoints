@@ -22,6 +22,7 @@ jobs:
         cd src 
         cd UsefullEndpoints
         dotnet tool restore
+        dotnet r make_readme
         dotnet r pack   
     # - name: Restore dependencies
     #   run: |
