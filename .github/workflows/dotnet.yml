@@ -22,20 +22,26 @@ jobs:
         cd src 
         cd UsefullEndpoints
         dotnet tool restore
-        dotnet pwsh readme.ps1        
-        dotnet restore
-    - name: Build
-      run: |
-        cd src
-        cd UsefullEndpoints
+        dotnet r pack   
+    # - name: Restore dependencies
+    #   run: |
+    #     cd src 
+    #     cd UsefullEndpoints
+    #     dotnet tool restore
+    #     dotnet pwsh readme.ps1        
+    #     dotnet restore
+    # - name: Build
+    #   run: |
+    #     cd src
+    #     cd UsefullEndpoints
         
-        dotnet build --no-restore
-    - name: Pack
-      run: |
-        cd src
-        cd UsefullEndpoints
-        cd UsefullExtensions
-        dotnet pack -o ../nugetPackages  --include-symbols --include-source
+    #     dotnet build --no-restore
+    # - name: Pack
+    #   run: |
+    #     cd src
+    #     cd UsefullEndpoints
+    #     cd UsefullExtensions
+    #     dotnet pack -o ../nugetPackages  --include-symbols --include-source
 
     - name: 'Upload nuget'
       #if: ${{ github.ref == 'refs/heads/main' }}
