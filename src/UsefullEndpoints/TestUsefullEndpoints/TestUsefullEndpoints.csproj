@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="NetCoreUsefullEndpoints" Version="6.2022.722.712" />-->
+    <!--<PackageReference Include="NetCoreUsefullEndpoints" Version="6.2022.1012.712" />-->
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
