@@ -24,17 +24,19 @@ namespace UsefullExtensions
         {
             if (authorization?.Length > 0)
             {
-                if(authorization.Length ==1 && string.IsNullOrWhiteSpace(authorization[0]))
+                if (authorization.Length == 1 && string.IsNullOrWhiteSpace(authorization[0]))
                     rh.RequireAuthorization();
 
                 else
                     rh.RequireAuthorization(authorization);
             }
             else
+            {
                 rh = rh.AllowAnonymous();
+            }
 
             if (!string.IsNullOrWhiteSpace(corsPolicy))
-                rh.RequireCors(corsPolicy);
+                rh = rh.RequireCors(corsPolicy);
 
         }
         public static void MapUsefullUser(this IEndpointRouteBuilder route, string? corsPolicy = null,string[]? authorization =null)
@@ -44,17 +46,21 @@ namespace UsefullExtensions
             {
                 return Results.Ok(httpContext.User);
             });
-            if((authorization?.Length??0) == 0)
-            {
-                authorization = new string[1] { "" };
-            }
-            rh.AddDefault(corsPolicy, authorization);
+            
+            if (corsPolicy?.Length > 0)
+                rh=rh.RequireCors(corsPolicy);
+            
+            if (authorization?.Length > 0 && authorization[0]?.Length>0)
+                rh = rh.RequireAuthorization(authorization);
+
+            
             rh = route.MapGet("api/usefull/user/noAuthorization", (HttpContext httpContext) =>
             {
                 return Results.Ok(httpContext.User);
-            });
+            }).AllowAnonymous();
 
-            rh.AddDefault(corsPolicy,null);
+            if (corsPolicy?.Length > 0)
+                rh = rh.RequireCors(corsPolicy);
 
         }
         public static void MapUsefullConfiguration(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
