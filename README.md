@@ -17,11 +17,19 @@ Register endpoints for
 7. Configuration View ( GetDebugView )
 
 # Usage
-Add this reference to your csproj
+Add this reference to your csproj in .NET 6
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="NetCoreUsefullEndpoints" Version="6.2022.1203.1551" />
+    <PackageReference Include="NetCoreUsefullEndpoints" Version="7.2022.1203.1551" />
+  </ItemGroup>
+
+```
+or in .NET 7
+
+```xml
+<ItemGroup>
+    <PackageReference Include="NetCoreUsefullEndpoints" Version="7.2022.1203.1551" />
   </ItemGroup>
 
 ```
@@ -59,6 +67,7 @@ GET=>/api/usefull/endpoints/text
 
 GET=>/api/usefull/configuration
 
+GET=>/api/usefull/httpContext/Connection
 
 
 # Security
