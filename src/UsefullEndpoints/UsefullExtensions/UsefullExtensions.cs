@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Buffers;
 using System.Text;
 
 namespace UsefullExtensions
@@ -19,6 +20,7 @@ namespace UsefullExtensions
             route.MapUsefullDate(cors, authorization);
             route.MapUsefullEndpoints(cors, authorization);
             route.MapUsefullConfiguration(cors, authorization);
+            route.MapUsefullContext(cors, authorization);
         }
         private static void AddDefault(this RouteHandlerBuilder rh, string? corsPolicy = null, string[]? authorization = null)
         {
@@ -62,6 +64,28 @@ namespace UsefullExtensions
             if (corsPolicy?.Length > 0)
                 rh = rh.RequireCors(corsPolicy);
 
+        }
+        public static void MapUsefullContext(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
+        {
+            ArgumentNullException.ThrowIfNull(route);
+            route.MapGet("api/usefull/httpContext/Connection", (HttpContext httpContext) =>
+            {
+                var con = httpContext.Connection;
+                if(con == null)
+                {
+                    return Results.NoContent();
+                }
+                var conSerialize = new
+                {
+                    LocalIpAddress = con.LocalIpAddress?.ToString(),
+                    RemoteIpAddress = con.RemoteIpAddress?.ToString(),
+                    con.RemotePort,
+                    con.LocalPort,
+                    con.ClientCertificate,
+                    con.Id
+                };
+                return Results.Ok(conSerialize);
+            }).AddDefault(corsPolicy, authorization);
         }
         public static void MapUsefullConfiguration(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
         {
