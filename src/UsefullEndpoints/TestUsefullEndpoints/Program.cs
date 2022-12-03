@@ -1,3 +1,4 @@
+using AMSWebAPI;
 using UsefullExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,9 +23,9 @@ app.UseCors(it => it.AllowCredentials().AllowAnyHeader().AllowAnyMethod().SetIsO
 app.MapUsefullAll();
 //app.MapUsefullAll("myCors", new string[] {"myAuthPolicy"});
 //app.MapUsefullConfiguration();
-
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseAMS();
 
 app.Run();
