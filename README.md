@@ -21,7 +21,7 @@ Add this reference to your csproj
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="NetCoreUsefullEndpoints" Version="6.2022.1026.2112" />
+    <PackageReference Include="NetCoreUsefullEndpoints" Version="6.2022.1203.1551" />
   </ItemGroup>
 
 ```
