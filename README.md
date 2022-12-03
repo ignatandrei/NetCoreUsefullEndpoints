@@ -15,7 +15,6 @@ Register endpoints for
 5. Digraph of current endpoints
 6. JSON of current endpoints
 7. Configuration View ( GetDebugView )
-8. Connection details
 
 # Usage
 Add this reference to your csproj in .NET 6
