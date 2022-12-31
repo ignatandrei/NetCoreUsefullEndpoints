@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
+//using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Internal;
@@ -73,13 +73,13 @@ namespace UsefullExtensions
             ArgumentNullException.ThrowIfNull(route);
             route.MapGet("api/usefull/httpContext/Connection",
 
-                Results<NoContent, Ok<object>>
+                //Results<NoContent, Ok<object>>
                 (HttpContext httpContext) =>
             {
                 var con = httpContext.Connection;
                 if (con == null)
                 {
-                    return TypedResults.NoContent();
+                    return Results.NoContent();
                 }
                 var conSerialize = new
                 {
@@ -90,24 +90,24 @@ namespace UsefullExtensions
                     con.ClientCertificate,
                     con.Id
                 };
-                return TypedResults.Ok((object)conSerialize);
+                return Results.Ok((object)conSerialize);
             }).AddDefault(corsPolicy, authorization);
         }
         public static void MapUsefullConfiguration(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
         {
             ArgumentNullException.ThrowIfNull(route);
             var rh = route.MapGet("api/usefull/configuration/",
-                Results<NoContent, ContentHttpResult>
+                //Results<NoContent, ContentHttpResult>
                 ([FromServices] IConfiguration config) =>
             {
                 var c = config as IConfigurationRoot;
                 if (c != null)
                 {
-                    return TypedResults.Content(c.GetDebugView());
+                    return Results.Content(c.GetDebugView());
                 }
                 else
                 {
-                    return TypedResults.NoContent();
+                    return Results.NoContent();
                 }
             });
             rh.AddDefault(corsPolicy, authorization);
@@ -140,7 +140,7 @@ namespace UsefullExtensions
             var rh = route.MapGet("api/usefull/date/",
                 (HttpContext httpContext) =>
             {
-                return TypedResults.Ok(DateTime.Now);
+                return Results.Ok(DateTime.Now);
                 //return Results.Ok(DateTime.Now);
             });
 
@@ -149,7 +149,7 @@ namespace UsefullExtensions
             rh = route.MapGet("api/usefull/dateUTC/",
                 (HttpContext httpContext) =>
                 {
-                    return TypedResults.Ok(DateTime.UtcNow);
+                    return Results.Ok(DateTime.UtcNow);
                     //return Results.Ok(DateTime.Now);
                 });
 
@@ -162,7 +162,7 @@ namespace UsefullExtensions
 
             var rh = route.MapGet("api/usefull/environment/", (HttpContext httpContext) =>
             {
-                return TypedResults.Ok(new Helper().FromStaticEnvironment());
+                return Results.Ok(new Helper().FromStaticEnvironment());
             });
             rh.AddDefault(corsPolicy, authorization);
 
@@ -193,7 +193,7 @@ namespace UsefullExtensions
                     var x = 0;
                     x++;
                     x = (x - 1) / (x - 1);
-                    return TypedResults.Ok("fake x");
+                    return Results.Ok("fake x");
                 }
                 catch (Exception)
                 {
@@ -214,7 +214,7 @@ namespace UsefullExtensions
                     var graph = sw.ToString();
 
                     // Write the graph to the response
-                    return TypedResults.Content(graph);
+                    return Results.Content(graph);
                 }
             });
             rh.AddDefault(corsPolicy, authorization);
@@ -230,7 +230,7 @@ namespace UsefullExtensions
                     httpMethod = endpoint.Metadata.OfType<HttpMethodMetadata>().FirstOrDefault()
 
                 }).ToArray();
-                return TypedResults.Ok(res);
+                return Results.Ok(res);
             });
             rh.AddDefault(corsPolicy, authorization);
 
