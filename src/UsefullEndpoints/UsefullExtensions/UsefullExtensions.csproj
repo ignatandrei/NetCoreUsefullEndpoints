@@ -15,7 +15,7 @@
 		<None Include="../readme.txt" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<PropertyGroup>
-		<Version>7.2022.1203.1551</Version>
+		<Version>7.2022.1231.1100</Version>
 		<Authors>Andrei Ignat</Authors>
 		
 		<Description>Some usefull extensions: error, environment, user</Description>
