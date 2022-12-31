@@ -27,5 +27,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseAMS();
+await app.RunAsync(UsefullExtensions.UsefullExtensions.cts.Token);
 
-app.Run();

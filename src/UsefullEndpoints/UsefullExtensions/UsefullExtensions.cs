@@ -13,6 +13,7 @@ namespace UsefullExtensions
 {
     public static class UsefullExtensions
     {
+        public static CancellationTokenSource cts=new ();
         public static void MapUsefullAll(this IEndpointRouteBuilder route, string? cors = null, string[]? authorization = null)
         {
             route.MapUsefullUser(cors, authorization);
@@ -22,6 +23,7 @@ namespace UsefullExtensions
             route.MapUsefullEndpoints(cors, authorization);
             route.MapUsefullConfiguration(cors, authorization);
             route.MapUsefullContext(cors, authorization);
+            route.MapShutdown(cors, authorization);
         }
         private static void AddDefault(this RouteHandlerBuilder rh, string? corsPolicy = null, string[]? authorization = null)
         {
@@ -109,6 +111,26 @@ namespace UsefullExtensions
                 }
             });
             rh.AddDefault(corsPolicy, authorization);
+        }
+        /// <summary>
+        /// use with await app.RunAsync(UsefullExtensions.UsefullExtensions.cts.Token);
+        /// </summary>
+        /// <param name="route"></param>
+        /// <param name="corsPolicy"></param>
+        /// <param name="authorization"></param>
+        public static void MapShutdown(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
+        {
+            ArgumentNullException.ThrowIfNull(route);
+            var rh = route.MapPost("api/usefull/shutdown/",
+                (HttpContext httpContext) =>
+                {
+                    cts?.Cancel();
+                    
+                });
+
+            rh.AddDefault(corsPolicy, authorization);
+
+
         }
         public static void MapUsefullDate(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
         {
