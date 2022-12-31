@@ -124,7 +124,9 @@ namespace UsefullExtensions
             var rh = route.MapPost("api/usefull/shutdown/",
                 (HttpContext httpContext) =>
                 {
-                    cts?.Cancel();
+                    var h= cts.Token.GetHashCode();
+                    cts?.Cancel();                    
+                    return h;
                     
                 });
 
