@@ -22,7 +22,7 @@ Add this reference to your csproj in .NET 6
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="NetCoreUsefullEndpoints" Version="7.2022.1231.1100" />
+    <PackageReference Include="NetCoreUsefullEndpoints" Version="6.2022.1231.1100" />
   </ItemGroup>
 
 ```
