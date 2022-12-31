@@ -16,6 +16,7 @@ Register endpoints for
 6. JSON of current endpoints
 7. Configuration View ( GetDebugView )
 8. Connection details ( remote ip address, local ip address...)
+9. Restart the app ( use await app.RunAsync(UsefullExtensions.UsefullExtensions.cts.Token);
 # Usage
 Add this reference to your csproj in .NET 6
 
@@ -68,6 +69,8 @@ GET=>/api/usefull/endpoints/text
 GET=>/api/usefull/configuration
 
 GET=>/api/usefull/httpContext/Connection
+
+POST=>/api/usefull/shutdown
 
 
 # Security
