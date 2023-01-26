@@ -17,6 +17,7 @@ Register endpoints for
 7. Configuration View ( GetDebugView )
 8. Connection details ( remote ip address, local ip address...)
 9. Restart the app ( use await app.RunAsync(UsefullExtensions.UsefullExtensions.cts.Token);
+10. See the start date of the application
 # Usage
 Add this reference to your csproj in .NET 6
 
@@ -30,7 +31,7 @@ or in .NET 7
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="NetCoreUsefullEndpoints" Version="7.2022.1231.1100" />
+    <PackageReference Include="NetCoreUsefullEndpoints" Version="7.2023.126.700" />
   </ItemGroup>
 
 ```
@@ -48,7 +49,9 @@ app.MapUsefullConfiguration();
 
 The list of API endpoints is
 
-
+GET=>api/usefull/start/date/
+GET=>api/usefull/start/dateUTC/
+GET=>/api/usefull/user/authorization
 
 GET=>/api/usefull/user/authorization
 
@@ -82,6 +85,9 @@ app.MapUsefullAll("myCors", new string[] {"myAuthPolicy"});
 //or
 app.MapUsefullConfiguration();
 ```
-
+For restarting , the last line should be
+```csharp
+await app.RunAsync(UsefullExtensions.UsefullExtensions.cts.Token);
+```
 
 # Enjoy!
