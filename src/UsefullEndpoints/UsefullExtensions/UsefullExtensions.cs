@@ -51,19 +51,19 @@ namespace UsefullExtensions
         public static void MapUsefullStartDate(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
         {
             ArgumentNullException.ThrowIfNull(route);
-            var rhUTC = route.MapGet("api/usefull/date/start", (HttpContext httpContext) =>
+            var rh = route.MapGet("api/usefull/date/start", (HttpContext httpContext) =>
             {
                 return Results.Ok(startDate);
             });
 
-            rhUTC.AddDefault(corsPolicy, authorization);
+            rh.AddDefault(corsPolicy, authorization);
 
-            var rh = route.MapGet("api/usefull/date/startUTC", (HttpContext httpContext) =>
+            var rhUTC = route.MapGet("api/usefull/date/startUTC", (HttpContext httpContext) =>
             {
                 return Results.Ok(startDateUTC);
             });
 
-            rh.AddDefault(corsPolicy, authorization);
+            rhUTC.AddDefault(corsPolicy, authorization);
 
         }
         public static void MapUsefullUser(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
@@ -168,7 +168,7 @@ namespace UsefullExtensions
 
             rh.AddDefault(corsPolicy, authorization);
 
-            var rhUTC = route.MapGet("api/usefull/nowUTC/",
+            var rhUTC = route.MapGet("api/usefull/date/nowUTC/",
                 (HttpContext httpContext) =>
                 {
                     return TypedResults.Ok(DateTime.UtcNow);
