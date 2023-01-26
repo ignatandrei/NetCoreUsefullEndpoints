@@ -54,7 +54,7 @@ jobs:
 
       - name: push to nuget
         run: |
-            dotnet nuget push ${{github.workspace}}/src/UsefullEndpoints/nugetPackages/progr*symb*.*pkg --api-key  ${{ secrets.NUGETAPIKEY }} --source https://api.nuget.org/v3/index.json
+            dotnet nuget push ${{github.workspace}}/src/UsefullEndpoints/nugetPackages/*symb*.*pkg --api-key  ${{ secrets.NUGETAPIKEY }} --source https://api.nuget.org/v3/index.json
 
   deploy:
     runs-on: ubuntu-latest
