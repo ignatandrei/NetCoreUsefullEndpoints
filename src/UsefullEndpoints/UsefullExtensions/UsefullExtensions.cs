@@ -13,9 +13,13 @@ namespace UsefullExtensions
 {
     public static class UsefullExtensions
     {
+        private static DateTime startDate = DateTime.Now;
+        private static DateTime startDateUTC = DateTime.UtcNow;
+        
         public static CancellationTokenSource cts=new ();
         public static void MapUsefullAll(this IEndpointRouteBuilder route, string? cors = null, string[]? authorization = null)
         {
+            route.MapUsefullStartDate(cors, authorization);
             route.MapUsefullUser(cors, authorization);
             route.MapUsefullEnvironment(cors, authorization);
             route.MapUsefullError(cors, authorization);
@@ -42,6 +46,24 @@ namespace UsefullExtensions
 
             if (!string.IsNullOrWhiteSpace(corsPolicy))
                 rh = rh.RequireCors(corsPolicy);
+
+        }
+        public static void MapUsefullStartDate(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
+        {
+            ArgumentNullException.ThrowIfNull(route);
+            var rhUTC = route.MapGet("api/usefull/date/start", (HttpContext httpContext) =>
+            {
+                return Results.Ok(startDateUTC);
+            });
+
+            rhUTC.AddDefault(corsPolicy, authorization);
+
+            var rh = route.MapGet("api/usefull/date/startUTC", (HttpContext httpContext) =>
+            {
+                return Results.Ok(startDateUTC);
+            });
+
+            rh.AddDefault(corsPolicy, authorization);
 
         }
         public static void MapUsefullUser(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
@@ -137,7 +159,7 @@ namespace UsefullExtensions
         public static void MapUsefullDate(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
         {
             ArgumentNullException.ThrowIfNull(route);
-            var rh = route.MapGet("api/usefull/date/",
+            var rh = route.MapGet("api/usefull/date/now",
                 (HttpContext httpContext) =>
             {
                 return TypedResults.Ok(DateTime.Now);
@@ -146,14 +168,14 @@ namespace UsefullExtensions
 
             rh.AddDefault(corsPolicy, authorization);
 
-            rh = route.MapGet("api/usefull/dateUTC/",
+            var rhUTC = route.MapGet("api/usefull/nowUTC/",
                 (HttpContext httpContext) =>
                 {
                     return TypedResults.Ok(DateTime.UtcNow);
                     //return Results.Ok(DateTime.Now);
                 });
 
-            rh.AddDefault(corsPolicy, authorization);
+            rhUTC.AddDefault(corsPolicy, authorization);
 
         }
         public static void MapUsefullEnvironment(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
