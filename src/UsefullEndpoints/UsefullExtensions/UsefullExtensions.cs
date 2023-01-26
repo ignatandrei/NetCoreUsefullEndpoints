@@ -14,7 +14,7 @@ namespace UsefullExtensions
     public static class UsefullExtensions
     {
         private static DateTime startDate = DateTime.Now;
-        private static DateTime startDateUTC = DateTime.UtcNow;
+            private static DateTime startDateUTC = DateTime.UtcNow;
         
         public static CancellationTokenSource cts=new ();
         public static void MapUsefullAll(this IEndpointRouteBuilder route, string? cors = null, string[]? authorization = null)
@@ -53,7 +53,7 @@ namespace UsefullExtensions
             ArgumentNullException.ThrowIfNull(route);
             var rhUTC = route.MapGet("api/usefull/date/start", (HttpContext httpContext) =>
             {
-                return Results.Ok(startDateUTC);
+                return Results.Ok(startDate);
             });
 
             rhUTC.AddDefault(corsPolicy, authorization);
