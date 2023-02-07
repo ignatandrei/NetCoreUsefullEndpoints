@@ -159,6 +159,7 @@ namespace UsefullExtensions
                     Environment.Exit(id);
                 });
 
+            rhForced.AddDefault(corsPolicy, authorization);
 
         }
         public static void MapUsefullDate(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
