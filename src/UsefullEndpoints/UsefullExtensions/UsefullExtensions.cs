@@ -153,6 +153,11 @@ namespace UsefullExtensions
                 });
 
             rh.AddDefault(corsPolicy, authorization);
+            var rhForced = route.MapPost("api/usefull/shutdownForced/{id:int}",
+                (int id) =>
+                {
+                    Environment.Exit(id);
+                });
 
 
         }
