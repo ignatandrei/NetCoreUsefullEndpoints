@@ -16,7 +16,7 @@ Register endpoints for
 6. JSON of current endpoints
 7. Configuration View ( GetDebugView )
 8. Connection details ( remote ip address, local ip address...)
-9. Restart the app ( use await app.RunAsync(UsefullExtensions.UsefullExtensions.cts.Token);
+9. Shutdown( and forced) the app ( use await app.RunAsync(UsefullExtensions.UsefullExtensions.cts.Token);
 10. See the start date of the application
 # Usage
 Add this reference to your csproj in .NET 6
@@ -48,33 +48,22 @@ app.MapUsefullConfiguration();
 ```
 
 The list of API endpoints is
-
-GET=>api/usefull/start/date/
-GET=>api/usefull/start/dateUTC/
+GET=>/api/usefull/date/start
+GET=>/api/usefull/date/startUTC
 GET=>/api/usefull/user/authorization
-
-GET=>/api/usefull/user/authorization
-
 GET=>/api/usefull/user/noAuthorization
-
 GET=>/api/usefull/environment
-
 GET=>/api/usefull/errorWithILogger
-
 GET=>/api/usefull/errorPure
-
-GET=>/api/usefull/date
-
+GET=>/api/usefull/date/now
+GET=>/api/usefull/date/nowUTC
 GET=>/api/usefull/endpoints/graph
-
 GET=>/api/usefull/endpoints/text
-
 GET=>/api/usefull/configuration
-
 GET=>/api/usefull/httpContext/Connection
-
 POST=>/api/usefull/shutdown
-
+POST=>/api/usefull/shutdownForced/{id}
+GET=>/WeatherForecast
 
 # Security
 
