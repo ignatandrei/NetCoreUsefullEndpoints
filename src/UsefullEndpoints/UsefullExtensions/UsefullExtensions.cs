@@ -31,6 +31,7 @@ namespace UsefullExtensions
         }
         private static void AddDefault(this RouteHandlerBuilder rh, string? corsPolicy = null, string[]? authorization = null)
         {
+            rh=rh.WithTags("NetCoreUsefullEndpoints");
             if (authorization?.Length > 0)
             {
                 if (authorization.Length == 1 && string.IsNullOrWhiteSpace(authorization[0]))
@@ -46,7 +47,7 @@ namespace UsefullExtensions
 
             if (!string.IsNullOrWhiteSpace(corsPolicy))
                 rh = rh.RequireCors(corsPolicy);
-
+            
         }
         public static void MapUsefullStartDate(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
         {
@@ -72,7 +73,7 @@ namespace UsefullExtensions
             var rh = route.MapGet("api/usefull/user/authorization", (HttpContext httpContext) =>
             {
                 return Results.Ok(httpContext.User);
-            });
+            }).WithTags("NetCoreUsefullEndpoints"); 
 
             if (corsPolicy?.Length > 0)
                 rh = rh.RequireCors(corsPolicy);
@@ -84,7 +85,7 @@ namespace UsefullExtensions
             rh = route.MapGet("api/usefull/user/noAuthorization", (HttpContext httpContext) =>
             {
                 return Results.Ok(httpContext.User);
-            }).AllowAnonymous();
+            }).AllowAnonymous().WithTags("NetCoreUsefullEndpoints"); ;
 
             if (corsPolicy?.Length > 0)
                 rh = rh.RequireCors(corsPolicy);
@@ -247,7 +248,7 @@ namespace UsefullExtensions
             });
             rh.AddDefault(corsPolicy, authorization);
 
-            route.MapGet("api/usefull/endpoints/text", (HttpContext httpContext, [FromServices] IEnumerable<EndpointDataSource> endpointSources) =>
+            var rhText=route.MapGet("api/usefull/endpoints/text", (HttpContext httpContext, [FromServices] IEnumerable<EndpointDataSource> endpointSources) =>
             {
                 var endpoints = endpointSources.SelectMany(es => es.Endpoints);
                 var res = endpoints.Select(endpoint =>
@@ -260,7 +261,7 @@ namespace UsefullExtensions
                 }).ToArray();
                 return TypedResults.Ok(res);
             });
-            rh.AddDefault(corsPolicy, authorization);
+            rhText.AddDefault(corsPolicy, authorization);
 
         }
     }
