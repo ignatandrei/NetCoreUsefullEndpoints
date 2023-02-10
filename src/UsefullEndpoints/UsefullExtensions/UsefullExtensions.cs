@@ -31,7 +31,7 @@ namespace UsefullExtensions
         }
         private static void AddDefault(this RouteHandlerBuilder rh, string? corsPolicy = null, string[]? authorization = null)
         {
-            rh=rh.WithTags("NetCoreUsefullEndpoints");
+            rh=rh.WithTags("NetCoreUsefullEndpoints").WithOpenApi();
             if (authorization?.Length > 0)
             {
                 if (authorization.Length == 1 && string.IsNullOrWhiteSpace(authorization[0]))
@@ -73,7 +73,8 @@ namespace UsefullExtensions
             var rh = route.MapGet("api/usefull/user/authorization", (HttpContext httpContext) =>
             {
                 return Results.Ok(httpContext.User);
-            }).WithTags("NetCoreUsefullEndpoints"); 
+            }).WithTags("NetCoreUsefullEndpoints")
+            .WithOpenApi(); 
 
             if (corsPolicy?.Length > 0)
                 rh = rh.RequireCors(corsPolicy);
@@ -85,7 +86,7 @@ namespace UsefullExtensions
             rh = route.MapGet("api/usefull/user/noAuthorization", (HttpContext httpContext) =>
             {
                 return Results.Ok(httpContext.User);
-            }).AllowAnonymous().WithTags("NetCoreUsefullEndpoints"); ;
+            }).AllowAnonymous().WithTags("NetCoreUsefullEndpoints").WithOpenApi();
 
             if (corsPolicy?.Length > 0)
                 rh = rh.RequireCors(corsPolicy);
