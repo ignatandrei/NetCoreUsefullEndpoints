@@ -47,6 +47,14 @@ app.MapUsefullAll();
 app.MapUsefullConfiguration();
 ```
 
+For shutdown 418 please add
+```csharp
+builder.Services.AddSingleton<MiddlewareShutdown>();
+var app = builder.Build();
+//ASAP
+app.UseMiddleware<MiddlewareShutdown>();
+```
+
 The list of API endpoints is
 GET=>/api/usefull/date/start
 GET=>/api/usefull/date/startUTC
