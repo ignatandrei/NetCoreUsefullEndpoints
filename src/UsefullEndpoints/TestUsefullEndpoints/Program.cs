@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddSingleton<MiddlewareShutdown>();
 var app = builder.Build();
 
 app.UseCors(it => it.AllowCredentials().AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(it => true));
@@ -19,7 +19,7 @@ app.UseCors(it => it.AllowCredentials().AllowAnyHeader().AllowAnyMethod().SetIsO
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseMiddleware<MiddlewareShutdown>();
 app.MapUsefullAll();
 //app.MapUsefullAll("myCors", new string[] {"myAuthPolicy"});
 //app.MapUsefullConfiguration();
