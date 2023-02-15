@@ -10,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<MiddlewareShutdown>();
+builder.Services.AddHostedService<LongRunningService>();
 var app = builder.Build();
 
 app.UseCors(it => it.AllowCredentials().AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(it => true));

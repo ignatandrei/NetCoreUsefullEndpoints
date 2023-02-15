@@ -1,32 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Routing.Internal;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System.Buffers;
-using System.Net;
-using System.Text;
-
-namespace UsefullExtensions;
-
-public class MiddlewareShutdown : IMiddleware
-{
-    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
-    {
-        if (UsefullExtensions.RequestedShutdownAt != null)
-        {
-            context.Response.StatusCode = 418;
-            await context.Response.WriteAsync("Service is stopping at " + UsefullExtensions.RequestedShutdownAt!.Value.ToString("s"));
-            return;
-        }
-        await next(context);
-        return;
-    }
-}
+﻿namespace UsefullExtensions;
 
 
 public static class UsefullExtensions
@@ -35,8 +7,16 @@ public static class UsefullExtensions
         private static DateTime startDateUTC = DateTime.UtcNow;
     public static DateTime? RequestedShutdownAt = null;
     public static CancellationTokenSource cts=new ();
-
-        
+    internal static Dictionary<string, LongRunningTask> lrts = new();
+    public static LongRunningTask AddLRTS(string id, string? name = null)
+    {
+        if(lrts.ContainsKey(id))
+        {
+            lrts[id].Dispose();
+        }
+        lrts.Add(id,new LongRunningTask(id, name ?? id));
+        return lrts[id];
+    }
 
     public static void MapUsefullAll(this IEndpointRouteBuilder route, string? cors = null, string[]? authorization = null)
     {
@@ -49,7 +29,8 @@ public static class UsefullExtensions
         route.MapUsefullEndpoints(cors, authorization);
         route.MapUsefullConfiguration(cors, authorization);
         route.MapUsefullContext(cors, authorization);
-        route.MapShutdown(cors, authorization);
+        route.MapUsefullShutdown(cors, authorization);
+        route.MapUsefullLRTS(cors, authorization);
     }
     private static void AddDefault(this RouteHandlerBuilder rh, string? corsPolicy = null, string[]? authorization = null)
     {
@@ -164,7 +145,7 @@ public static class UsefullExtensions
     /// <param name="route"></param>
     /// <param name="corsPolicy"></param>
     /// <param name="authorization"></param>
-    public static void MapShutdown(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
+    public static void MapUsefullShutdown(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
     {
         ArgumentNullException.ThrowIfNull(route);
         var rh = route.MapPost("api/usefull/shutdown/",
@@ -196,6 +177,20 @@ public static class UsefullExtensions
 
         rhForced.AddDefault(corsPolicy, authorization);
 
+
+
+    }
+    public static void MapUsefullLRTS(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
+    {
+        ArgumentNullException.ThrowIfNull(route);
+        var rh = route.MapGet("api/usefull/LongRunningTasks/",
+            (HttpContext httpContext) =>
+            {
+                var data=lrts.Select(it=>new { it.Key, it.Value.name }).ToArray();
+                return data;
+            });
+
+        rh.AddDefault(corsPolicy, authorization);
     }
     public static void MapUsefullDate(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
     {
