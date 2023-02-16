@@ -191,6 +191,13 @@ public static class UsefullExtensions
             });
 
         rh.AddDefault(corsPolicy, authorization);
+        var rhCount = route.MapGet("api/usefull/LongRunningTasks/Count",
+            (HttpContext httpContext) =>
+            {
+                return lrts.LongCount();
+            });
+
+        rhCount.AddDefault(corsPolicy, authorization);
     }
     public static void MapUsefullDate(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
     {
