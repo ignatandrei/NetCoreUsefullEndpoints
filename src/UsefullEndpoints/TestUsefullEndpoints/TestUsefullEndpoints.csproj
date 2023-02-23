@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UsefullExtensions\UsefullExtensions.csproj" />
-	  <!--<PackageReference Include="NetCoreUsefullEndpoints" Version="7.2023.219.1934" />-->
+	  <!--<PackageReference Include="NetCoreUsefullEndpoints" Version="7.2023.223.1807" />-->
 
   </ItemGroup>
 

@@ -1,6 +1,5 @@
 ﻿namespace UsefullExtensions;
 
-
 public static class UsefullExtensions
 {
     private static DateTime startDate = DateTime.Now;
@@ -236,21 +235,41 @@ public static class UsefullExtensions
     {
         ArgumentNullException.ThrowIfNull(route);
 
-        var rh = route.MapGet("api/usefull/errorWithILogger", (HttpContext httpContext, [FromServices] ILogger logger) =>
+        var rh = route.MapGet("api/usefull/error/WithILogger", (HttpContext httpContext, [FromServices] ILogger<GenericLogging> logger) =>
         {
             try
             {
                 //var id = httpContext.Request.RouteValues["id"] as string;
-                throw new ArgumentException("do not support ");
+                throw new ArgumentException("this is a fake argument");
             }
             catch (Exception ex)
             {
-                logger?.LogError(ex, "usefull error");
+                logger?.LogError(ex, "usefull , but fake, error");
                 throw;
             }
         });
+
         rh.AddDefault(corsPolicy, authorization);
-        rh = route.MapGet("api/usefull/errorPure", (HttpContext httpContext) =>
+
+        var rhEvent = route.MapGet("api/usefull/error/WithEvtId/{eventId}/{name}", (HttpContext httpContext, [FromServices] ILogger<GenericLogging> logger, [FromQuery] int eventId, [FromQuery] string name ) =>
+        {
+            try
+            {
+                //var id = httpContext.Request.RouteValues["id"] as string;
+                throw new ArgumentException("this is a fake argument");
+            }
+            catch (Exception ex)
+            {
+                
+                var evt = new EventId(eventId, name);
+                logger?.LogError(evt,ex, "usefull , but fake, error");
+                throw;
+            }
+        });
+
+        rhEvent.AddDefault(corsPolicy, authorization);
+
+        var rhPure = route.MapGet("api/usefull/error/Pure", (HttpContext httpContext) =>
         {
 
             try
@@ -265,7 +284,7 @@ public static class UsefullExtensions
                 throw;
             }
         });
-        rh.AddDefault(corsPolicy, authorization);
+        rhPure.AddDefault(corsPolicy, authorization);
 
     }
     public static void MapUsefullEndpoints(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
