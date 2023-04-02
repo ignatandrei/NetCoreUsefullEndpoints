@@ -69,12 +69,35 @@ public static class UsefullExtensions
         rhUTC.AddDefault(corsPolicy, authorization);
 
     }
+    public record UserRet (string? name,string? authType, bool isAuthenticated); 
     public static void MapUsefullUser(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
     {
         ArgumentNullException.ThrowIfNull(route);
         var rh = route.MapGet("api/usefull/user/authorization", (HttpContext httpContext) =>
         {
-            return Results.Ok(httpContext.User);
+            var user = httpContext.User;
+            if(user == null)
+                return Results.Ok((UserRet?)null);
+            if (user.Identity != null)
+                return Results.Ok((UserRet?)new UserRet(
+                
+                    user.Identity.Name,
+                    user.Identity.AuthenticationType,
+                    user.Identity.IsAuthenticated
+
+                ));
+
+            var auth = user.Identities.FirstOrDefault(it => it.IsAuthenticated);
+            if(auth == null)
+                return Results.Ok((UserRet?)null);
+            return Results.Ok((UserRet?)new UserRet(
+
+                   auth.Name,
+                   auth.AuthenticationType,
+                   auth.IsAuthenticated
+
+               ));
+
         }).WithTags("NetCoreUsefullEndpoints")
         .WithOpenApi(); 
 
