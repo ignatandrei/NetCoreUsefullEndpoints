@@ -31,7 +31,7 @@ or in .NET 7
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="NetCoreUsefullEndpoints" Version="7.2023.126.700" />
+    <PackageReference Include="NetCoreUsefullEndpoints" Version="7.2023.402.1715" />
   </ItemGroup>
 
 ```
