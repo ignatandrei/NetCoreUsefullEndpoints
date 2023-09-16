@@ -18,6 +18,8 @@ Register endpoints for
 8. Connection details ( remote ip address, local ip address...)
 9. Shutdown( and forced) the app ( use await app.RunAsync(UsefullExtensions.UsefullExtensions.cts.Token);
 10. See the start date of the application
+11. See the list of Hosted services / start all / stop all
+
 # Usage
 Add this reference to your csproj in .NET 6
 
@@ -31,7 +33,7 @@ or in .NET 7
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="NetCoreUsefullEndpoints" Version="7.2023.402.1715" />
+    <PackageReference Include="NetCoreUsefullEndpoints" Version="7.2023.916.1715" />
   </ItemGroup>
 
 ```
@@ -43,6 +45,7 @@ using UsefullExtensions;
 //code
 var app = builder.Build();
 app.MapUsefullAll();
+app.MapHostedServices(app.Services.GetServices<IHostedService>().ToArray());
 //or for just some usefull
 app.MapUsefullConfiguration();
 ```

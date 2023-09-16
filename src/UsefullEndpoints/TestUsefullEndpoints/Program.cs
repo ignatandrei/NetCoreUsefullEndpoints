@@ -1,4 +1,7 @@
 using AMSWebAPI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using TestUsefullEndpoints;
 using UsefullExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<MiddlewareShutdown>();
 builder.Services.AddHostedService<LongRunningService>();
+builder.Services.AddHostedService<MyServiceTime>();
 var app = builder.Build();
 
 app.UseCors(it => it.AllowCredentials().AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(it => true));
@@ -22,6 +26,7 @@ app.UseCors(it => it.AllowCredentials().AllowAnyHeader().AllowAnyMethod().SetIsO
 }
 app.UseMiddleware<MiddlewareShutdown>();
 app.MapUsefullAll();
+app.MapHostedServices(app.Services.GetServices<IHostedService>().ToArray());
 //app.MapUsefullAll("myCors", new string[] {"myAuthPolicy"});
 //app.MapUsefullConfiguration();
 app.UseAuthorization();

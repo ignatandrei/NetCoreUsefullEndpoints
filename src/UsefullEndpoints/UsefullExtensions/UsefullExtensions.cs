@@ -1,4 +1,7 @@
-﻿namespace UsefullExtensions;
+﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.Extensions.Hosting;
+
+namespace UsefullExtensions;
 
 public static class UsefullExtensions
 {
@@ -6,6 +9,7 @@ public static class UsefullExtensions
         private static DateTime startDateUTC = DateTime.UtcNow;
     public static DateTime? RequestedShutdownAt = null;
     public static CancellationTokenSource cts=new ();
+    private static string MSFTBackGround="Microsoft.AspNetCore.Hosting.GenericWebHostService";
     internal static Dictionary<string, LongRunningTask> lrts = new();
     public static LongRunningTask AddLRTS(string id, string? name = null)
     {
@@ -16,7 +20,80 @@ public static class UsefullExtensions
         lrts.Add(id,new LongRunningTask(id, name ?? id));
         return lrts[id];
     }
+    public static void MapHostedServices(this IEndpointRouteBuilder route,IHostedService[] services, string? cors = null, string[]? authorization = null)
+    {
+        ArgumentNullException.ThrowIfNull(route);
+        var rhList = route.MapGet("api/usefull/services/list", Results<Ok<string[]>,NoContent>  () =>
+        {
+            if (services.Length == 0)
+                return TypedResults.NoContent();
 
+            var data = services
+            .Where(it=>it != null)
+            .Select(it => it.GetType().FullName ?? "")
+            .Where(it=>it!= MSFTBackGround)
+            .ToArray();
+            return TypedResults.Ok(data);
+        });
+
+        rhList.AddDefault(cors, authorization);
+
+        var rhClose = route.MapPost("api/usefull/services/closeall", async Task<Results<Ok<string>, BadRequest<string[]>>> () =>
+        {
+            List<string> badServices = new();
+            if (services.Length > 0)
+                foreach (var service in services)
+                {
+                    
+                    try
+                    {
+                        if (service == null) continue;
+                        if (service.GetType().FullName == MSFTBackGround) continue;
+                        await service.StopAsync(CancellationToken.None);
+                    }
+                    catch (Exception ex)
+                    {
+                        badServices.Add(service.GetType().Name + " ex: " + ex.Message);
+                    }
+                }
+            if (badServices.Count > 0)
+            {
+                return TypedResults.BadRequest(badServices.ToArray());
+                //return TypedResults.NotFound();
+            }
+
+            return TypedResults.Ok("services number:" + services.Length);
+        });
+
+        rhClose.AddDefault(cors, authorization);
+        var rhStart = route.MapPost("api/usefull/services/startall", async Task<Results<Ok<string>, BadRequest<string[]>>> (HttpContext httpContext) =>
+        {
+            List<string> badServices = new();
+            if (services.Length > 0)
+                foreach (var service in services)
+                {
+                    try
+                    {
+                        if (service == null) continue;
+                        if (service.GetType().FullName == MSFTBackGround) continue; 
+                        await service.StartAsync(CancellationToken.None);
+                    }
+                    catch (Exception ex)
+                    {
+                        badServices.Add(service.GetType().Name +" ex: "+ ex.Message);
+                    }
+                }
+            if (badServices.Count > 0)
+            {
+                return TypedResults.BadRequest<string[]>(badServices.ToArray());
+            }
+
+            return TypedResults.Ok("services number:" + services.Length);
+        });
+
+        rhStart.AddDefault(cors, authorization);
+
+    }
     public static void MapUsefullAll(this IEndpointRouteBuilder route, string? cors = null, string[]? authorization = null)
     {
        
@@ -178,7 +255,7 @@ public static class UsefullExtensions
                 return h;
                 
             });
-
+        
         rh.AddDefault(corsPolicy, authorization);
         var rhSec = route.MapPost("api/usefull/shutdownAfter/{seconds}",
             (HttpContext httpContext, int seconds) =>
@@ -198,6 +275,15 @@ public static class UsefullExtensions
             });
 
         rhForced.AddDefault(corsPolicy, authorization);
+
+        var rhGrace = route.MapPost("api/usefull/shutdownGrace",
+            (HttpContext httpContext, IHostApplicationLifetime life) =>
+            {
+                life.StopApplication();
+                return;
+
+            });
+        rhGrace.AddDefault(corsPolicy, authorization);
 
 
 
