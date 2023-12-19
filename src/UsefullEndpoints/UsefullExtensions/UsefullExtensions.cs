@@ -102,6 +102,7 @@ public static class UsefullExtensions
         route.MapUsefullEnvironment(cors, authorization);
         route.MapUsefullError(cors, authorization);
         route.MapUsefullDate(cors, authorization);
+        route.MapUsefullStartHost(cors, authorization);
         route.MapUsefullEndpoints(cors, authorization);
         route.MapUsefullConfiguration(cors, authorization);
         route.MapUsefullContext(cors, authorization);
@@ -306,6 +307,38 @@ public static class UsefullExtensions
             });
 
         rhCount.AddDefault(corsPolicy, authorization);
+    }
+    public static void MapUsefullStartHost(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
+    {
+        ArgumentNullException.ThrowIfNull(route);
+        var rh = route.MapGet("api/usefull/startHost/ticks",
+            (HttpContext httpContext) =>
+            {
+                return TypedResults.Ok(Environment.TickCount64);
+                
+            });
+
+        rh.AddDefault(corsPolicy, authorization);
+
+        var rhUTC = route.MapGet("api/usefull/startHost/dateUTC/",
+            (HttpContext httpContext) =>
+            {
+                var dt = DateTime.UtcNow.AddMilliseconds(-Environment.TickCount64);
+                return TypedResults.Ok(dt);
+                //return Results.Ok(DateTime.Now);
+            });
+
+        rhUTC.AddDefault(corsPolicy, authorization);
+        var rhLocal = route.MapGet("api/usefull/startHost/dateHost/",
+            (HttpContext httpContext) =>
+            {
+                var dt = DateTime.Now.AddMilliseconds(-Environment.TickCount64);
+                return TypedResults.Ok(dt);
+                //return Results.Ok(DateTime.Now);
+            });
+
+        rhLocal.AddDefault(corsPolicy, authorization);
+
     }
     public static void MapUsefullDate(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
     {
