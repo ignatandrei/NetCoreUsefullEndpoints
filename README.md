@@ -20,6 +20,7 @@ Register endpoints for
 10. See the start date of the application
 11. See the list of Hosted services / start all / stop all
 12. When the PC has started ( uptime )
+13. Information about the process ( memory, threads, handles, uptime )
 
 # Usage
 Add this reference to your csproj in .NET 6
