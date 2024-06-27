@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Hosting;
+using System.Diagnostics;
 
 namespace UsefullExtensions;
 
@@ -108,6 +109,7 @@ public static class UsefullExtensions
         route.MapUsefullContext(cors, authorization);
         route.MapUsefullShutdown(cors, authorization);
         route.MapUsefullLRTS(cors, authorization);
+        route.MapUsefullProcess(cors, authorization);
     }
     private static void AddDefault(this RouteHandlerBuilder rh, string? corsPolicy = null, string[]? authorization = null)
     {
@@ -129,6 +131,58 @@ public static class UsefullExtensions
             rh = rh.RequireCors(corsPolicy);
         
     }
+    public static void MapUsefullProcess(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
+    {
+        ArgumentNullException.ThrowIfNull(route);
+        var rh = route.MapGet("api/usefull/process/", (HttpContext httpContext) =>
+        {
+            var p =Process.GetCurrentProcess();
+            var data = new
+            {
+                p.Id,
+                p.ProcessName,
+                p.StartTime,
+                p.TotalProcessorTime,
+                ThreadsCount=p.Threads.Count,
+                p.WorkingSet64,
+                p.PrivateMemorySize64,
+                p.PagedMemorySize64,
+                p.PagedSystemMemorySize64,
+                p.PeakPagedMemorySize64,
+                p.PeakVirtualMemorySize64,
+                p.PeakWorkingSet64,
+                p.VirtualMemorySize64,
+                p.BasePriority,
+                p.HandleCount,
+                p.MachineName,
+                PriorityClassName= p.PriorityClass.ToString(),
+                p.PriorityClass,
+                p.NonpagedSystemMemorySize64,
+                p.MainModule?.FileName,
+                MinWorkingSet= (long)p.MinWorkingSet,
+                MaxWorkingSet=(long)p.MaxWorkingSet,
+                TotalProcessorTimeSeconds=p.TotalProcessorTime.TotalSeconds,
+                TotalUserProcessorTimeSeconds=p.UserProcessorTime.TotalSeconds,
+                TotalPrivilegedProcessorTimeSeconds=p.PrivilegedProcessorTime.TotalSeconds,
+                FileVersionInfoShort= new
+                {
+                    p.MainModule?.FileVersionInfo?.FileVersion,
+                    p.MainModule?.FileVersionInfo?.FileName,
+                    p.MainModule?.FileVersionInfo?.FileDescription,
+                    p.MainModule?.FileVersionInfo?.OriginalFilename,
+                    p.MainModule?.FileVersionInfo?.ProductVersion,
+                },
+                p.MainModule?.FileVersionInfo
+
+            };
+            return Results.Ok(data);
+        });
+
+        rh.AddDefault(corsPolicy, authorization);
+
+
+    }
+
     public static void MapUsefullStartDate(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
     {
         ArgumentNullException.ThrowIfNull(route);
