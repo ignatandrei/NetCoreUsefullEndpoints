@@ -1,0 +1,16 @@
+<p>Here will be the data from NetCoreUtilities</p>
+
+
+
+<app-load-http Name="Start Date(local)" Url="usefull/date/start"></app-load-http>
+<br />
+<app-load-http Name="Now(local)" Url="usefull/date/now"></app-load-http>
+<br />
+<app-load-http Name="Start Host(local)" Url="usefull/startHost/dateHost"></app-load-http>
+<br />
+<app-load-http Name="Start Date(UTC)" Url="usefull/date/startUTC"  Key="startUTC" (getData)="onGetData($event)" ></app-load-http>
+<br />
+<app-load-http Name="Now(UTC)" Url="usefull/date/nowUTC" Key="nowUTC"></app-load-http>
+<br />
+<app-load-http Name="Start Host(UTC)" Url="usefull/startHost/dateUTC" Key="hostUTC"></app-load-http>
+
