@@ -106,6 +106,7 @@ public static class UsefullExtensions
         route.MapUsefullStartHost(cors, authorization);
         route.MapUsefullEndpoints(cors, authorization);
         route.MapUsefullConfiguration(cors, authorization);
+        route.MapUsefullConfigurationKV(cors, authorization);
         route.MapUsefullContext(cors, authorization);
         route.MapUsefullShutdown(cors, authorization);
         route.MapUsefullLRTS(cors, authorization);
@@ -273,6 +274,30 @@ public static class UsefullExtensions
             };
             return TypedResults.Ok((object)conSerialize);
         }).AddDefault(corsPolicy, authorization);
+    }
+    public static void MapUsefullConfigurationKV(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
+    {
+        ArgumentNullException.ThrowIfNull(route);
+        var rh = route.MapGet("api/usefull/configurationKV/",
+            Results<NoContent,Ok< Dictionary<string,string?>>>
+            ([FromServices] IConfiguration c) =>
+            {
+                
+                if (c != null)
+                {
+                    var data = 
+                        c.GetChildren()
+                        .Select(it => new { it.Key, it.Value })
+                        .ToDictionary(it => it.Key, it => it.Value);
+                    ArgumentNullException.ThrowIfNull(data);    
+                    return TypedResults.Ok(data);
+                }
+                else
+                {
+                    return TypedResults.NoContent();
+                }
+            });
+        rh.AddDefault(corsPolicy, authorization);
     }
     public static void MapUsefullConfiguration(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
     {
