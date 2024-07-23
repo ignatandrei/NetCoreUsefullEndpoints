@@ -3,6 +3,13 @@
 [![NuGet Package](https://img.shields.io/nuget/v/NetCoreUsefullEndpoints?logo=nuget)](https://www.nuget.org/packages/NetCoreUsefullEndpoints)
 [![Project license](https://img.shields.io/github/license/ignatandrei/NetCoreUsefullEndpoints)](LICENSE)
 
+
+[![GitHub last commit](https://img.shields.io/github/last-commit/ignatandrei/NetCoreUsefullEndpoints?label=updated)](https://github.com/ignatandrei/NetCoreUsefullEndpoints)
+[![Stars](https://img.shields.io/github/stars/ignatandrei/NetCoreUsefullEndpoints)](https://github.com/ignatandrei/NetCoreUsefullEndpoints/stargazers)
+[![Sparkline](https://stars.medv.io/ignatandrei/NetCoreUsefullEndpoints.svg)](https://stars.medv.io/ignatandrei/NetCoreUsefullEndpoints)
+[![Nuget](https://img.shields.io/nuget/v/NetCoreUsefullEndpoints)](https://www.nuget.org/packages/NetCoreUsefullEndpoints)
+[![NuGet Badge](https://buildstats.info/nuget/NetCoreUsefullEndpoints)](https://www.nuget.org/packages/NetCoreUsefullEndpoints/)
+
 # What it does
 
 Register endpoints for
