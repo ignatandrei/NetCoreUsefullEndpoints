@@ -6,6 +6,8 @@ using UsefullExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 // Add services to the container.
 builder.Services.AddCors();
 builder.Services.AddControllers();
@@ -16,6 +18,8 @@ builder.Services.AddSingleton<MiddlewareShutdown>();
 builder.Services.AddHostedService<LongRunningService>();
 builder.Services.AddHostedService<MyServiceTime>();
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 app.UseCors(it => it.AllowCredentials().AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(it => true));
 // Configure the HTTP request pipeline.
