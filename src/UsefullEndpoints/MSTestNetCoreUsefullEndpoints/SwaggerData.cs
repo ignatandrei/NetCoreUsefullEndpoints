@@ -35,6 +35,10 @@ public class SwaggerData : PageTest
         var response = await httpClient.GetAsync("/swagger/v1/swagger.json");
         Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         var content = await response.Content.ReadAsStringAsync();
+        await base.Playwright.Chromium.LaunchAsync(new()
+        {
+            Headless = false,
+        });
         await Page.GotoAsync(baseUrl+"swagger/index.html");
         var data= await Page.ScreenshotAsync();
         await System.IO.File.WriteAllBytesAsync("swagger.png", data);
@@ -122,7 +126,7 @@ public class SwaggerData : PageTest
                         await cntVideo.DisposeAsync();
                         var file = Directory.GetFiles(pathVideo).First();
                         System.IO.File.Move(file, Path.Combine(pathVideos,name+ ".webm"));
-
+                        Directory.Delete(pathVideo);
                         //return;
                     }
                 }
