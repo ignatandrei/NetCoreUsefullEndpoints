@@ -22,8 +22,20 @@ Register endpoints for
 11. See the list of Hosted services / start all / stop all
 12. When the PC has started ( uptime )
 13. Information about the process ( memory, threads, handles, uptime )
+14. Information about adresses
+15. Information about the RuntimeInformation ( OS, Framework)
+  
 
 # Usage
+For .NET 8 , add this reference to your csproj
+
+```xml
+<ItemGroup>
+    <PackageReference Include="NetCoreUsefullEndpoints" Version="8.2024.906.1703" />
+  </ItemGroup>
+
+```
+
 Add this reference to your csproj in .NET 6
 
 ```xml
@@ -78,7 +90,7 @@ GET=>/api/usefull/httpContext/Connection
 POST=>/api/usefull/shutdown
 POST=>/api/usefull/shutdownForced/{id}
 GET=>/WeatherForecast
-
+  
 # Security
 
 Each function has a default implementation with AllowAnonymous ( a part user ) and without put RequireCors ;
