@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.Hosting;
 using System.Diagnostics;
 
@@ -7,32 +9,32 @@ namespace UsefullExtensions;
 public static class UsefullExtensions
 {
     private static DateTime startDate = DateTime.Now;
-        private static DateTime startDateUTC = DateTime.UtcNow;
+    private static DateTime startDateUTC = DateTime.UtcNow;
     public static DateTime? RequestedShutdownAt = null;
-    public static CancellationTokenSource cts=new ();
-    private static string MSFTBackGround="Microsoft.AspNetCore.Hosting.GenericWebHostService";
+    public static CancellationTokenSource cts = new();
+    private static string MSFTBackGround = "Microsoft.AspNetCore.Hosting.GenericWebHostService";
     internal static Dictionary<string, LongRunningTask> lrts = new();
     public static LongRunningTask AddLRTS(string id, string? name = null)
     {
-        if(lrts.ContainsKey(id))
+        if (lrts.ContainsKey(id))
         {
             lrts[id].Dispose();
         }
-        lrts.Add(id,new LongRunningTask(id, name ?? id));
+        lrts.Add(id, new LongRunningTask(id, name ?? id));
         return lrts[id];
     }
-    public static void MapHostedServices(this IEndpointRouteBuilder route,IHostedService[] services, string? cors = null, string[]? authorization = null)
+    public static void MapHostedServices(this IEndpointRouteBuilder route, IHostedService[] services, string? cors = null, string[]? authorization = null)
     {
         ArgumentNullException.ThrowIfNull(route);
-        var rhList = route.MapGet("api/usefull/services/list", Results<Ok<string[]>,NoContent>  () =>
+        var rhList = route.MapGet("api/usefull/services/list", Results<Ok<string[]>, NoContent> () =>
         {
             if (services.Length == 0)
                 return TypedResults.NoContent();
 
             var data = services
-            .Where(it=>it != null)
+            .Where(it => it != null)
             .Select(it => it.GetType().FullName ?? "")
-            .Where(it=>it!= MSFTBackGround)
+            .Where(it => it != MSFTBackGround)
             .ToArray();
             return TypedResults.Ok(data);
         });
@@ -45,7 +47,7 @@ public static class UsefullExtensions
             if (services.Length > 0)
                 foreach (var service in services)
                 {
-                    
+
                     try
                     {
                         if (service == null) continue;
@@ -76,12 +78,12 @@ public static class UsefullExtensions
                     try
                     {
                         if (service == null) continue;
-                        if (service.GetType().FullName == MSFTBackGround) continue; 
+                        if (service.GetType().FullName == MSFTBackGround) continue;
                         await service.StartAsync(CancellationToken.None);
                     }
                     catch (Exception ex)
                     {
-                        badServices.Add(service.GetType().Name +" ex: "+ ex.Message);
+                        badServices.Add(service.GetType().Name + " ex: " + ex.Message);
                     }
                 }
             if (badServices.Count > 0)
@@ -97,7 +99,7 @@ public static class UsefullExtensions
     }
     public static void MapUsefullAll(this IEndpointRouteBuilder route, string? cors = null, string[]? authorization = null)
     {
-       
+
         route.MapUsefullStartDate(cors, authorization);
         route.MapUsefullUser(cors, authorization);
         route.MapUsefullEnvironment(cors, authorization);
@@ -111,10 +113,12 @@ public static class UsefullExtensions
         route.MapUsefullShutdown(cors, authorization);
         route.MapUsefullLRTS(cors, authorization);
         route.MapUsefullProcess(cors, authorization);
+        route.MapUsefullRuntimeInformation(cors, authorization);
+        route.MapUsefullAdresses(cors, authorization);
     }
     private static void AddDefault(this RouteHandlerBuilder rh, string? corsPolicy = null, string[]? authorization = null)
     {
-        rh=rh.WithTags("NetCoreUsefullEndpoints").WithOpenApi();
+        rh = rh.WithTags("NetCoreUsefullEndpoints").WithOpenApi();
         if (authorization?.Length > 0)
         {
             if (authorization.Length == 1 && string.IsNullOrWhiteSpace(authorization[0]))
@@ -130,21 +134,21 @@ public static class UsefullExtensions
 
         if (!string.IsNullOrWhiteSpace(corsPolicy))
             rh = rh.RequireCors(corsPolicy);
-        
+
     }
     public static void MapUsefullProcess(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
     {
         ArgumentNullException.ThrowIfNull(route);
         var rh = route.MapGet("api/usefull/process/", (HttpContext httpContext) =>
         {
-            var p =Process.GetCurrentProcess();
+            var p = Process.GetCurrentProcess();
             var data = new
             {
                 p.Id,
                 p.ProcessName,
                 p.StartTime,
                 p.TotalProcessorTime,
-                ThreadsCount=p.Threads.Count,
+                ThreadsCount = p.Threads.Count,
                 p.WorkingSet64,
                 p.PrivateMemorySize64,
                 p.PagedMemorySize64,
@@ -156,16 +160,16 @@ public static class UsefullExtensions
                 p.BasePriority,
                 p.HandleCount,
                 p.MachineName,
-                PriorityClassName= p.PriorityClass.ToString(),
+                PriorityClassName = p.PriorityClass.ToString(),
                 p.PriorityClass,
                 p.NonpagedSystemMemorySize64,
                 p.MainModule?.FileName,
-                MinWorkingSet= (long)p.MinWorkingSet,
-                MaxWorkingSet=(long)p.MaxWorkingSet,
-                TotalProcessorTimeSeconds=p.TotalProcessorTime.TotalSeconds,
-                TotalUserProcessorTimeSeconds=p.UserProcessorTime.TotalSeconds,
-                TotalPrivilegedProcessorTimeSeconds=p.PrivilegedProcessorTime.TotalSeconds,
-                FileVersionInfoShort= new
+                MinWorkingSet = (long)p.MinWorkingSet,
+                MaxWorkingSet = (long)p.MaxWorkingSet,
+                TotalProcessorTimeSeconds = p.TotalProcessorTime.TotalSeconds,
+                TotalUserProcessorTimeSeconds = p.UserProcessorTime.TotalSeconds,
+                TotalPrivilegedProcessorTimeSeconds = p.PrivilegedProcessorTime.TotalSeconds,
+                FileVersionInfoShort = new
                 {
                     p.MainModule?.FileVersionInfo?.FileVersion,
                     p.MainModule?.FileVersionInfo?.FileName,
@@ -202,18 +206,18 @@ public static class UsefullExtensions
         rhUTC.AddDefault(corsPolicy, authorization);
 
     }
-    public record UserRet (string? name,string? authType, bool isAuthenticated); 
+    public record UserRet(string? name, string? authType, bool isAuthenticated);
     public static void MapUsefullUser(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
     {
         ArgumentNullException.ThrowIfNull(route);
         var rh = route.MapGet("api/usefull/user/authorization", (HttpContext httpContext) =>
         {
             var user = httpContext.User;
-            if(user == null)
+            if (user == null)
                 return Results.Ok((UserRet?)null);
             if (user.Identity != null)
                 return Results.Ok((UserRet?)new UserRet(
-                
+
                     user.Identity.Name,
                     user.Identity.AuthenticationType,
                     user.Identity.IsAuthenticated
@@ -221,7 +225,7 @@ public static class UsefullExtensions
                 ));
 
             var auth = user.Identities.FirstOrDefault(it => it.IsAuthenticated);
-            if(auth == null)
+            if (auth == null)
                 return Results.Ok((UserRet?)null);
             return Results.Ok((UserRet?)new UserRet(
 
@@ -232,7 +236,7 @@ public static class UsefullExtensions
                ));
 
         }).WithTags("NetCoreUsefullEndpoints")
-        .WithOpenApi(); 
+        .WithOpenApi();
 
         if (corsPolicy?.Length > 0)
             rh = rh.RequireCors(corsPolicy);
@@ -279,17 +283,17 @@ public static class UsefullExtensions
     {
         ArgumentNullException.ThrowIfNull(route);
         var rh = route.MapGet("api/usefull/configurationKV/",
-            Results<NoContent,Ok< Dictionary<string,string?>>>
+            Results<NoContent, Ok<Dictionary<string, string?>>>
             ([FromServices] IConfiguration c) =>
             {
-                
+
                 if (c != null)
                 {
-                    var data = 
+                    var data =
                         c.GetChildren()
                         .Select(it => new { it.Key, it.Value })
                         .ToDictionary(it => it.Key, it => it.Value);
-                    ArgumentNullException.ThrowIfNull(data);    
+                    ArgumentNullException.ThrowIfNull(data);
                     return TypedResults.Ok(data);
                 }
                 else
@@ -330,19 +334,19 @@ public static class UsefullExtensions
         var rh = route.MapPost("api/usefull/shutdown/",
             (HttpContext httpContext) =>
             {
-                var h= cts.Token.GetHashCode();
-                cts?.Cancel();                    
+                var h = cts.Token.GetHashCode();
+                cts?.Cancel();
                 return h;
-                
+
             });
-        
+
         rh.AddDefault(corsPolicy, authorization);
         var rhSec = route.MapPost("api/usefull/shutdownAfter/{seconds}",
             (HttpContext httpContext, int seconds) =>
             {
                 RequestedShutdownAt = DateTime.UtcNow;
                 var h = cts.Token.GetHashCode();
-                cts?.CancelAfter(Math.Abs(seconds)*1000);
+                cts?.CancelAfter(Math.Abs(seconds) * 1000);
                 return h;
 
             });
@@ -374,7 +378,7 @@ public static class UsefullExtensions
         var rh = route.MapGet("api/usefull/LongRunningTasks/",
             (HttpContext httpContext) =>
             {
-                var data=lrts.Select(it=>new { it.Key, it.Value.name }).ToArray();
+                var data = lrts.Select(it => new { it.Key, it.Value.name }).ToArray();
                 return data;
             });
 
@@ -394,7 +398,7 @@ public static class UsefullExtensions
             (HttpContext httpContext) =>
             {
                 return TypedResults.Ok(Environment.TickCount64);
-                
+
             });
 
         rh.AddDefault(corsPolicy, authorization);
@@ -452,6 +456,29 @@ public static class UsefullExtensions
         rh.AddDefault(corsPolicy, authorization);
 
     }
+    public static void MapUsefullRuntimeInformation(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
+    {
+        ArgumentNullException.ThrowIfNull(route);
+
+        var rh = route.MapGet("api/usefull/runtimeinformation/", (HttpContext httpContext) =>
+        {
+            return TypedResults.Ok(new Helper().FromStaticRuntimeInformation());
+        });
+        rh.AddDefault(corsPolicy, authorization);
+        var rh1 = route.MapGet("api/usefull/runtimeinformationAll/", (HttpContext httpContext) =>
+        {
+            var info = new Helper().FromStaticRuntimeInformation();
+            return TypedResults.Ok(new
+            {
+                info.FrameworkDescription,
+                info.OSDescription,
+                ProcessArchitecture = info.ProcessArchitecture.ToString(),
+                OSArchitecture = info.OSArchitecture.ToString(),
+            });
+        });
+        rh1.AddDefault(corsPolicy, authorization);
+
+    }
     public static void MapUsefullError(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
     {
         ArgumentNullException.ThrowIfNull(route);
@@ -472,7 +499,7 @@ public static class UsefullExtensions
 
         rh.AddDefault(corsPolicy, authorization);
 
-        var rhEvent = route.MapGet("api/usefull/error/WithEvtId/{eventId}/{name}", (HttpContext httpContext, [FromServices] ILogger<GenericLogging> logger, [FromQuery] int eventId, [FromQuery] string name ) =>
+        var rhEvent = route.MapGet("api/usefull/error/WithEvtId/{eventId}/{name}", (HttpContext httpContext, [FromServices] ILogger<GenericLogging> logger, [FromQuery] int eventId, [FromQuery] string name) =>
         {
             try
             {
@@ -481,9 +508,9 @@ public static class UsefullExtensions
             }
             catch (Exception ex)
             {
-                
+
                 var evt = new EventId(eventId, name);
-                logger?.LogError(evt,ex, "usefull , but fake, error");
+                logger?.LogError(evt, ex, "usefull , but fake, error");
                 throw;
             }
         });
@@ -524,7 +551,7 @@ public static class UsefullExtensions
         });
         rh.AddDefault(corsPolicy, authorization);
 
-        var rhText=route.MapGet("api/usefull/endpoints/text", (HttpContext httpContext, [FromServices] IEnumerable<EndpointDataSource> endpointSources) =>
+        var rhText = route.MapGet("api/usefull/endpoints/text", (HttpContext httpContext, [FromServices] IEnumerable<EndpointDataSource> endpointSources) =>
         {
             var endpoints = endpointSources.SelectMany(es => es.Endpoints);
             var res = endpoints.Select(endpoint =>
@@ -536,6 +563,17 @@ public static class UsefullExtensions
 
             }).ToArray();
             return TypedResults.Ok(res);
+        });
+        rhText.AddDefault(corsPolicy, authorization);
+
+    }
+    public static void MapUsefullAdresses(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
+    {
+        var rhText = route.MapGet("api/usefull/adresses", (HttpContext httpContext, [FromServices] IServer server) =>
+        {
+            var adresses = server.Features.Get<IServerAddressesFeature>();
+            var ret= adresses?.Addresses?.ToArray()??[] ;
+            return TypedResults.Ok(ret);
         });
         rhText.AddDefault(corsPolicy, authorization);
 
