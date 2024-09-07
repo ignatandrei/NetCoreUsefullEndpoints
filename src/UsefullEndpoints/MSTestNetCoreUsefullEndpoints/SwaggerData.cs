@@ -10,10 +10,15 @@ namespace MSTestNetCoreUsefullEndpoints;
 [TestClass]
 public class SwaggerData : PageTest
 {
+    private async Task<bool> WaitDefault()
+    {
+        await Task.Delay(3000);
+        return true;
+    }
     [TestMethod]
     public async Task TestGetNoParameters()
     {
-        
+        var pathVideos = "videos";
         // Arrange
         var appHost = await DistributedApplicationTestingBuilder.CreateAsync<Projects.UsefullEndpoints_AppHost>();
         appHost.Services.ConfigureHttpClientDefaults(clientBuilder =>
@@ -38,6 +43,8 @@ public class SwaggerData : PageTest
         writer.Write(content);
         writer.Flush();
         ms.Position = 0;
+        if (!Directory.Exists(pathVideos))
+            Directory.CreateDirectory(pathVideos);
         var openApiDocument = new OpenApiStreamReader().Read(ms, out var diagnostic);
         foreach (var path in openApiDocument.Paths)
         {
@@ -47,12 +54,27 @@ public class SwaggerData : PageTest
                 {
                     if (op.Value.Parameters.Count == 0)
                     {
-                        var element = Page.GetByText(path.Key, new PageGetByTextOptions()
+                        var url = baseUrl + path.Key;
+                        url = url.Replace("//", "/");
+                        //await Page.GotoAsync(url);
+                        var name = path.Key.Replace("/", "_");
+                        string pathVideo = pathVideos + name;
+                        var cntVideo = await base.NewContextAsync(new()
+                        {
+                            RecordVideoDir=pathVideo,
+                            
+                        });
+                        var page = await cntVideo.NewPageAsync();
+                        await page.GotoAsync(baseUrl + "swagger/index.html");
+                        await page.WaitForLoadStateAsync();
+                        await page.ScreenshotAsync();
+                        var element = page.GetByText(path.Key, new PageGetByTextOptions()
                         {
                             Exact=true,
                         });
+                        await WaitDefault();
                         await element.ClickAsync();
-                        var allOperation = Page.Locator("[class='opblock-summary opblock-summary-get']"
+                        var allOperation = page.Locator("[class='opblock-summary opblock-summary-get']"
                             , new PageLocatorOptions()
                             {
                                 Has = element
@@ -64,15 +86,21 @@ public class SwaggerData : PageTest
                             
                             ;
                         var btnTry = allOperation.GetByText("Try it out");
+                        await WaitDefault();
+                        await btnTry.HoverAsync();
+                        await WaitDefault();
+                        await btnTry.HighlightAsync();
+                        await WaitDefault();
                         await btnTry.ClickAsync();
                         var btnExec = allOperation.GetByText($"Execute");
+                        await WaitDefault();
+                        await btnExec.HoverAsync();
+                        await WaitDefault();
+                        await btnTry.HighlightAsync();
+                        await WaitDefault();
                         await btnExec.ClickAsync();
                         //await allOperation.HighlightAsync();
 
-                        var url = baseUrl + path.Key;
-                        url=url.Replace("//", "/");
-                        //await Page.GotoAsync(url);
-                        var name = path.Key.Replace("/", "_");
                         //PageScreenshotOptions options = new PageScreenshotOptions();
                         //options.FullPage = true;   
                         //options.Path = name + ".png";
@@ -88,8 +116,14 @@ public class SwaggerData : PageTest
                         {
                             Path=name+".png"
                         });
-                        await element.ClickAsync();
-                        return;
+                        await WaitDefault();
+                        //await element.ClickAsync();
+                        //await WaitDefault();
+                        await cntVideo.DisposeAsync();
+                        var file = Directory.GetFiles(pathVideo).First();
+                        System.IO.File.Move(file, Path.Combine(pathVideos,name+ ".webm"));
+
+                        //return;
                     }
                 }
             }
