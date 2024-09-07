@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.Playwright;
@@ -46,21 +47,49 @@ public class SwaggerData : PageTest
                 {
                     if (op.Value.Parameters.Count == 0)
                     {
+                        var element = Page.GetByText(path.Key, new PageGetByTextOptions()
+                        {
+                            Exact=true,
+                        });
+                        await element.ClickAsync();
+                        var allOperation = Page.Locator("[class='opblock-summary opblock-summary-get']"
+                            , new PageLocatorOptions()
+                            {
+                                Has = element
+                            }
+                            )
+                            .Locator("..")
+                            //.Locator("..")
+                            //.GetByText("Try it out")
+                            
+                            ;
+                        var btnTry = allOperation.GetByText("Try it out");
+                        await btnTry.ClickAsync();
+                        var btnExec = allOperation.GetByText($"Execute");
+                        await btnExec.ClickAsync();
+                        //await allOperation.HighlightAsync();
+
                         var url = baseUrl + path.Key;
                         url=url.Replace("//", "/");
-                        await Page.GotoAsync(url);
-                        
+                        //await Page.GotoAsync(url);
                         var name = path.Key.Replace("/", "_");
                         //PageScreenshotOptions options = new PageScreenshotOptions();
                         //options.FullPage = true;   
                         //options.Path = name + ".png";
                         //await Page.ScreenshotAsync(options);
-                        await Page.ScreenshotAsync(new()
+                        //await page.Locator(".header").ScreenshotAsync(new() { Path = "screenshot.png" });
+                        //await Page.ScreenshotAsync(new()
+                        //{
+                        //    Path = name + ".png",
+                        //    FullPage = true,
+                        //});
+                        await allOperation.ScrollIntoViewIfNeededAsync();
+                        await allOperation.ScreenshotAsync(new LocatorScreenshotOptions()
                         {
-                            Path = name + ".png",
-                            FullPage = true,
+                            Path=name+".png"
                         });
-
+                        await element.ClickAsync();
+                        return;
                     }
                 }
             }
