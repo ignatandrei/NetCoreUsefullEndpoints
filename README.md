@@ -27,6 +27,16 @@ Register endpoints for
 16. Info about the user is in role or not
 
 # Usage
+For .NET 9 , add this reference to your csproj
+
+```xml
+<ItemGroup>
+    <PackageReference Include="NetCoreUsefullEndpoints" Version="9.2025.312.1703" />
+  </ItemGroup>
+
+```
+
+
 For .NET 8 , add this reference to your csproj
 
 ```xml
