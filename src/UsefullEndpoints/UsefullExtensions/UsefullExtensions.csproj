@@ -10,7 +10,7 @@
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
 		 <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />   
-		<PackageReference Include="RSCG_Static" Version="2021.12.18.2037" PrivateAssets="all" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<!--<PackageReference Include="RSCG_Static" Version="2021.12.18.2037" PrivateAssets="all" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />-->
 		<None Include="../../../README.md" Pack="true" PackagePath="\" />
 		<None Include="../../../docs/nuget.png" Pack="true" PackagePath="\" />    
 		<None Include="../readme.txt" Pack="true" PackagePath="\" />

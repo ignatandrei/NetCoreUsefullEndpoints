@@ -475,21 +475,14 @@ public static class UsefullExtensions
     public static void MapUsefullRuntimeInformation(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
     {
         ArgumentNullException.ThrowIfNull(route);
-
-        var rh = route.MapGet("api/usefull/runtimeinformation/", (HttpContext httpContext) =>
-        {
-            return TypedResults.Ok(new Helper().FromStaticRuntimeInformation());
-        });
-        rh.AddDefault(corsPolicy, authorization);
         var rh1 = route.MapGet("api/usefull/runtimeinformationAll/", (HttpContext httpContext) =>
         {
-            var info = new Helper().FromStaticRuntimeInformation();
             return TypedResults.Ok(new
             {
-                info.FrameworkDescription,
-                info.OSDescription,
-                ProcessArchitecture = info.ProcessArchitecture.ToString(),
-                OSArchitecture = info.OSArchitecture.ToString(),
+                System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription,
+                System.Runtime.InteropServices.RuntimeInformation.OSDescription,
+                ProcessArchitecture = System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString(),
+                OSArchitecture = System.Runtime.InteropServices.RuntimeInformation.OSArchitecture.ToString(),
             });
         });
         rh1.AddDefault(corsPolicy, authorization);
