@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
 		 <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />   
 		<PackageReference Include="RSCG_Static" Version="2021.12.18.2037" PrivateAssets="all" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<None Include="../../../README.md" Pack="true" PackagePath="\" />
@@ -16,7 +16,7 @@
 		<None Include="../readme.txt" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<PropertyGroup>
-		<Version>8.2024.906.1703</Version>
+		<Version>9.2025.312.1703</Version>
 		<Authors>Andrei Ignat</Authors>
 		
 		<Description>Some usefull extensions: error, environment, user</Description>
@@ -42,6 +42,11 @@
 	<PropertyGroup>
 	  <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
 	  <PackageIcon>nuget.png</PackageIcon>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GX</CompilerGeneratedFilesOutputPath>
 	</PropertyGroup>
 
 </Project>

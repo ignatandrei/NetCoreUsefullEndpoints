@@ -24,7 +24,7 @@ Register endpoints for
 13. Information about the process ( memory, threads, handles, uptime )
 14. Information about adresses
 15. Information about the RuntimeInformation ( OS, Framework)
-  
+16. Info about the user is in role or not
 
 # Usage
 For .NET 8 , add this reference to your csproj

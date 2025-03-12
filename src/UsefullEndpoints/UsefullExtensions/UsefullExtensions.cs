@@ -238,12 +238,7 @@ public static class UsefullExtensions
         }).WithTags("NetCoreUsefullEndpoints")
         .WithOpenApi();
 
-        if (corsPolicy?.Length > 0)
-            rh = rh.RequireCors(corsPolicy);
-
-        if (authorization?.Length > 0 && authorization[0]?.Length > 0)
-            rh = rh.RequireAuthorization(authorization);
-
+        rh.AddDefault(corsPolicy, authorization);
 
         rh = route.MapGet("api/usefull/user/noAuthorization", (HttpContext httpContext) =>
         {
@@ -252,6 +247,15 @@ public static class UsefullExtensions
 
         if (corsPolicy?.Length > 0)
             rh = rh.RequireCors(corsPolicy);
+
+        rh = route.MapGet("api/usefull/user/isInRole/{roleName}", (HttpContext httpContext, string roleName) =>
+        {            
+            return httpContext.User?.IsInRole(roleName)??false;
+
+        }).WithTags("NetCoreUsefullEndpoints")
+        .WithOpenApi();
+
+        rh.AddDefault(corsPolicy, authorization);
 
     }
     public static void MapUsefullContext(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
