@@ -455,7 +455,19 @@ public static class UsefullExtensions
 
         var rh = route.MapGet("api/usefull/environment/", (HttpContext httpContext) =>
         {
-            return TypedResults.Ok(new Helper().FromStaticEnvironment());
+            return TypedResults.Ok(new
+            {
+                Environment.CommandLine,
+                Environment.CurrentDirectory,
+                Environment.CpuUsage,
+                Environment.CurrentManagedThreadId,
+                Environment.ProcessorCount,
+                Environment.ProcessId,
+                Environment.IsPrivilegedProcess,
+                Environment.OSVersion,
+                Environment.UserName
+                //TODO: add more....
+            });
         });
         rh.AddDefault(corsPolicy, authorization);
 
