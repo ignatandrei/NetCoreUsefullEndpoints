@@ -31,7 +31,7 @@ For .NET 9 , add this reference to your csproj
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="NetCoreUsefullEndpoints" Version="9.2025.312.1703" />
+    <PackageReference Include="NetCoreUsefullEndpoints" Version="9.2025.405.1013" />
   </ItemGroup>
 
 ```
@@ -99,7 +99,8 @@ GET=>/api/usefull/configuration
 GET=>/api/usefull/httpContext/Connection
 POST=>/api/usefull/shutdown
 POST=>/api/usefull/shutdownForced/{id}
-GET=>/WeatherForecast
+GET=>api/usefull/user/isInRole/{role}
+GET=>api/usefull/user/claims/simple
   
 # Security
 

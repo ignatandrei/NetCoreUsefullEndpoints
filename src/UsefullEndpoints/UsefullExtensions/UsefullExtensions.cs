@@ -256,6 +256,41 @@ public static class UsefullExtensions
         .WithOpenApi();
 
         rh.AddDefault(corsPolicy, authorization);
+        rh = route.MapGet("api/usefull/user/claims/simple", (HttpContext httpContext) =>
+        {
+            List<string> roles = [];
+            if (httpContext.User == null)return roles.ToArray();
+            var rolesClaims = httpContext.User.Claims?.ToArray();
+            if (rolesClaims?.Length >0) {
+                roles.AddRange( rolesClaims
+                .Where(it =>it !=null)
+                .Select(it =>it.ToString())
+                .Where(it=> it != null)
+                .ToArray()
+                );
+            }
+
+            var ids= httpContext.User.Identities?.ToArray();
+            if(ids?.Length > 0)
+            {
+                foreach (var id in ids)
+                {
+                    var claims = id.Claims?.ToArray();
+                    if (claims != null)
+                    {
+                        roles.AddRange(claims
+                            .Where(it => it != null)
+                            .Select(it => it.ToString())
+                            .Where(it => it != null)
+                            .ToArray());
+                    }
+                }
+            }   
+            return roles.Distinct().ToArray();
+        }).WithTags("NetCoreUsefullEndpoints")
+        .WithOpenApi();
+
+        rh.AddDefault(corsPolicy, authorization);
 
     }
     public static void MapUsefullContext(this IEndpointRouteBuilder route, string? corsPolicy = null, string[]? authorization = null)
