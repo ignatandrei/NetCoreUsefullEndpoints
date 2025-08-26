@@ -236,14 +236,21 @@ public static class UsefullExtensions
                ));
 
         }).WithTags("NetCoreUsefullEndpoints")
+        
         .WithOpenApi();
-
-        rh.AddDefault(corsPolicy, authorization);
-
-        rh = route.MapGet("api/usefull/user/noAuthorization", (HttpContext httpContext) =>
+        if (authorization?.Length > 0)
         {
-            return Results.Ok(httpContext.User);
-        }).AllowAnonymous().WithTags("NetCoreUsefullEndpoints").WithOpenApi();
+            rh.AddDefault(corsPolicy, authorization);
+        }
+        else
+        {
+            var newAuth = new string[] { "" };
+            rh.AddDefault(corsPolicy, newAuth);
+        }
+        rh = route.MapGet("api/usefull/user/noAuthorization", (HttpContext httpContext) =>
+            {
+                return Results.Ok(httpContext.User);
+            }).AllowAnonymous().WithTags("NetCoreUsefullEndpoints").WithOpenApi();
 
         if (corsPolicy?.Length > 0)
             rh = rh.RequireCors(corsPolicy);
