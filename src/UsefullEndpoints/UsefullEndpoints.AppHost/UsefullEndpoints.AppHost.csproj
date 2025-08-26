@@ -13,7 +13,9 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.4.0" />
+    <PackageReference Include="WebAPIDocsExtensionAspire" Version="940.2025.825.2100" />
   </ItemGroup>
+
 
   <ItemGroup>
     <ProjectReference Include="..\TestUsefullEndpoints\TestUsefullEndpoints.csproj" />
