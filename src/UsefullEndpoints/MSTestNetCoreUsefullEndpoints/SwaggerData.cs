@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers;
 using Microsoft.Playwright;
 using Microsoft.Playwright.MSTest;
+using System.Text.Json;
 using static System.Net.WebRequestMethods;
 
 namespace MSTestNetCoreUsefullEndpoints;
@@ -42,26 +41,21 @@ public class SwaggerData : PageTest
         await Page.GotoAsync(baseUrl+"swagger/index.html");
         var data= await Page.ScreenshotAsync();
         await System.IO.File.WriteAllBytesAsync("swagger.png", data);
-        using var ms = new MemoryStream();
-        var writer = new StreamWriter(ms);
-        writer.Write(content);
-        writer.Flush();
-        ms.Position = 0;
+        using var openApiDocument = JsonDocument.Parse(content);
         if (!Directory.Exists(pathVideos))
             Directory.CreateDirectory(pathVideos);
-        var openApiDocument = new OpenApiStreamReader().Read(ms, out var diagnostic);
-        foreach (var path in openApiDocument.Paths)
+        foreach (var path in openApiDocument.RootElement.GetProperty("paths").EnumerateObject())
         {
-            foreach (var op in path.Value.Operations)
+            foreach (var op in path.Value.EnumerateObject())
             {
-                if (op.Key == OperationType.Get)
+                if (op.Name ==  "get")
                 {
-                    if (op.Value.Parameters.Count == 0)
+                    if (!op.Value.TryGetProperty("parameters", out var parameters) || parameters.GetArrayLength() == 0)
                     {
-                        var url = baseUrl + path.Key;
+                        var url = baseUrl + path.Name;
                         url = url.Replace("//", "/");
                         //await Page.GotoAsync(url);
-                        var name = path.Key.Replace("/", "_");
+                        var name = path.Name.Replace("/", "_");
                         string pathVideo = pathVideos + name;
                         var cntVideo = await base.NewContextAsync(new()
                         {
@@ -72,7 +66,7 @@ public class SwaggerData : PageTest
                         await page.GotoAsync(baseUrl + "swagger/index.html");
                         await page.WaitForLoadStateAsync();
                         await page.ScreenshotAsync();
-                        var element = page.GetByText(path.Key, new PageGetByTextOptions()
+                        var element = page.GetByText(path.Name, new PageGetByTextOptions()
                         {
                             Exact=true,
                         });
