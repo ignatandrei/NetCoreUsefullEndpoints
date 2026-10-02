@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.Hosting;
 using System.Diagnostics;
+using System.Net;
 
 namespace UsefullExtensions;
 
@@ -96,6 +97,8 @@ public static class UsefullExtensions
 
         rhStart.AddDefault(cors, authorization);
 
+
+
     }
     public static void MapUsefullAll(this IEndpointRouteBuilder route, string? cors = null, string[]? authorization = null)
     {
@@ -115,6 +118,17 @@ public static class UsefullExtensions
         route.MapUsefullProcess(cors, authorization);
         route.MapUsefullRuntimeInformation(cors, authorization);
         route.MapUsefullAdresses(cors, authorization);
+        route.MapUsefullDump(cors, authorization);    
+    }
+    public static void MapUsefullDump(this IEndpointRouteBuilder route,  string? cors = null, string[]? authorization = null)
+    {
+        var rhDump = route.MapPost("api/usefull/takedump/{path}", (HttpContext httpContext, string? path) => 
+        {
+            return TypedResults.Ok(TakeDump.WriteCurrentProcess(path));
+        });
+
+        rhDump.AddDefault(cors, authorization);
+
     }
     private static void AddDefault(this RouteHandlerBuilder rh, string? corsPolicy = null, string[]? authorization = null)
     {
