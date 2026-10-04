@@ -25,6 +25,7 @@ Register endpoints for
 14. Information about adresses
 15. Information about the RuntimeInformation ( OS, Framework)
 16. Info about the user is in role or not
+17. Create memory dump of the current process (Windows and Linux)
 
 # Usage
 For .NET 9 , add this reference to your csproj
@@ -101,6 +102,7 @@ POST=>/api/usefull/shutdown
 POST=>/api/usefull/shutdownForced/{id}
 GET=>api/usefull/user/isInRole/{role}
 GET=>api/usefull/user/claims/simple
+POST=>/api/usefull/takedump/{path}  # Creates a memory dump file for the current process. If {path} is omitted or null, a default path in the app base directory is used. Linux requires the 'createdump' utility or appropriate permissions.
   
 # Security
 
